@@ -1,0 +1,151 @@
+/*
+ * Gradle build file.
+ */
+import static groovy.io.FileType.*
+
+group = 'com.semagia.mappish'
+version = '0.0.1'
+bundleVersion = version
+
+projectName = 'Oomap Loomap'
+projectDescription = projectName // TODO
+projectURL = 'https://github.com/heuer/oomaploomap'
+
+vendorName = 'Semagia'
+vendorURL = 'http://www.semagia.com/'
+licenseName = 'Apache Software License, Version 2.0'
+licenseURL = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+
+apply plugin: 'java'
+apply plugin:'application'
+apply plugin: 'maven'
+apply plugin: 'eclipse'
+
+sourceCompatibility = '1.6'
+
+defaultTasks 'clean', 'build'
+
+mainClassName = 'com.semagia.mappish.Mappish'
+
+eclipseClasspath.downloadSources = false
+
+gradle.taskGraph.whenReady {taskGraph ->
+   if (!taskGraph.hasTask(':release')) {
+       version += '-SNAPSHOT'
+   }
+}
+
+rtext = 'lib/rsyntaxtextarea.jar'
+framework = 'lib/bsaf-1.9.jar'
+
+REP_TMAPI = 'http://www.tmapi.org/maven-repository/'
+REP_TMLAB = 'http://maven.topicmapslab.de/public/'
+REP_ONTOPIA = 'http://ontopia.googlecode.com/svn/maven-repository/'
+REP_ONTOPIA_SNAPSHOT = 'http://ontopia.googlecode.com/svn/maven-snapshot-repository/'
+REP_TMAPI_SNAPSHOT = 'http://www.tmapi.org/maven-repository/snapshots/'
+REP_SEMAGIA_SNAPSHOT = 'http://repository.semagia.com/snapshots/'
+
+configurations {
+    build {
+      extendsFrom compile
+    }
+    all*.exclude group: 'org.apache.pdfbox', module: 'pdfbox'
+    all*.exclude group: 'org.apache.wicket'
+    all*.exclude group: 'org.apache.poi'
+    all*.exclude group: 'org.tmapix'
+    all*.exclude group: 'saxon'
+    all*.exclude group: 'com.hp.hpl.jena'
+    all*.exclude group: 'log4j'
+    all*.exclude group: 'commons-fileupload'
+    all*.exclude group: 'commons-logging'
+    all*.exclude group: 'org.hibernate'
+    all*.exclude group: 'javax.servlet'
+    all*.exclude group: 'taglibs'
+    all*.exclude group: 'com.touchgraph'
+    all*.exclude group: 'net.sf.opencsv'
+    all*.exclude group: 'urbanophile'
+    all*.exclude group: 'velocity'
+    all*.exclude group: 'org.ccil.cowan.tagsoup'
+    all*.exclude group: 'jgroups'
+    all*.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    all*.exclude group: 'com.ibm.icu'
+    all*.exclude group: 'crimson'
+    all*.exclude group: 'de.topicmapslab', module: 'ctm-writer'
+    all*.exclude group: 'de.topicmapslab', module: 'jtm-writer'
+    all*.exclude group: 'org.codehaus.jackson'
+    all*.exclude group: 'gnu.trove'
+    all*.exclude group: 'com.semagia.mio', module: 'mio-core'
+    all*.exclude group: 'com.thaiopensource'
+
+    runtime.exclude group: 'de.jflex'
+}
+
+repositories {
+    mavenCentral()
+    mavenRepo urls: REP_TMAPI_SNAPSHOT
+    mavenRepo urls: REP_SEMAGIA_SNAPSHOT
+    mavenRepo urls: REP_TMLAB
+    mavenRepo urls: REP_ONTOPIA
+    mavenRepo urls: REP_ONTOPIA_SNAPSHOT
+}
+
+dependencies {
+    compile files(rtext, framework),
+            'com.semagia.mio:mio-syntaxpack-nodeps:0.1.3-SNAPSHOT',
+            'org.slf4j:slf4j-api:(1.5.8,)',
+            'net.ontopia:ontopia-engine:5.1.3',
+            'de.topicmapslab.tmql4j:tmql4j-path:3.1.0',
+            'de.topicmapslab.tmql4j:tmql4ontopia:2.6.5',
+            'net.ontopia:ontopia-mio:0.1.0-SNAPSHOT'
+
+    runtime 'org.tmapi:tmapi:(2.0.2,)',
+            'de.topicmapslab.tmql4j:tmql4j-flwr:3.1.0',
+            'de.topicmapslab.tmql4j:tmql4j-select:3.1.0',
+            'de.topicmapslab.tmql4j:tmql4j-update:3.1.0',
+            'de.topicmapslab.tmql4j:tmql4j-insert:3.1.0',
+            'de.topicmapslab.tmql4j:tmql4j-merge:3.1.0'
+
+    testCompile 'junit:junit:4.8.1'
+
+    build 'de.jflex:jflex:1.4.3'
+}
+
+task generateLexers << {
+    ant {
+        taskdef classname: 'JFlex.anttask.JFlexTask', name: 'jflex', classpath: configurations.build.asPath
+    }
+    def grammarDir = new File('src/grammar/')
+    grammarDir.eachFileMatch FILES, ~/.+?\.flex/, {
+      ant.jflex file: 'src/grammar/' + it.name, destdir: 'src/main/java/'
+      remove_jflex_methods(new File('src/main/java/com/semagia/mappish/mode/' + it.name.replace('.flex', '.java')))
+    }
+}
+
+private def remove_jflex_methods(File file) {
+    def reset_pattern = ~ /public final void yyreset\([^}]+\}/
+    def zzfill_pattern = ~ /(?s)private boolean zzRefill\(.+?numRead < 0.+?return true[^\}]+\}/
+    
+    content = file.getText()
+    
+    res = zzfill_pattern.matcher(content).replaceAll('')
+    res = reset_pattern.matcher(res).replaceAll('')
+    writable = file.asWritable()
+    writable.setText(res)
+}
+
+
+compileJava.dependsOn generateLexers
+
+jar {
+      manifest {
+        name = projectName
+        attributes 'Implementation-Version': project.version, 
+                    'Implementation-Vendor': project.vendorName, 
+                    'Implementation-URL': project.projectURL, 
+                    'Sealed': 'false'
+      }
+}
+
+artifacts {
+    archives jar
+}
