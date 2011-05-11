@@ -15,6 +15,8 @@
  */
 package com.semagia.mappish.model;
 
+import java.net.URI;
+
 /**
  * 
  * 
@@ -22,7 +24,7 @@ package com.semagia.mappish.model;
  */
 public interface ITopicMapSource {
 
-    public String getIRI();
+    public URI getURI();
 
     public String getName();
 

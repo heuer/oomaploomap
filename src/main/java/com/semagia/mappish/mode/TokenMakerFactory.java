@@ -21,7 +21,7 @@ import java.util.Map;
 import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
-import com.semagia.mappish.model.QueryLanguage;
+import com.semagia.mappish.query.QueryLanguage;
 
 /**
  * 

@@ -21,9 +21,9 @@ import javax.swing.JInternalFrame;
 
 import org.jdesktop.application.Application;
 
-import com.semagia.mappish.model.IResult;
 import com.semagia.mappish.model.ITopicMapSource;
-import com.semagia.mappish.model.Query;
+import com.semagia.mappish.query.IResult;
+import com.semagia.mappish.query.Query;
 
 /**
  * 
@@ -45,7 +45,7 @@ public final class QueryFrame extends JInternalFrame implements IQueryView {
      * @param tmSrc 
      */
     public QueryFrame(final Application app, final ITopicMapSource tmSrc) {
-        super(tmSrc.getName() != null ? tmSrc.getName() + " (" + tmSrc.getIRI() + ")" : tmSrc.getIRI(), 
+        super(tmSrc.getName() != null ? tmSrc.getName() + " (" + tmSrc.getURI() + ")" : tmSrc.getURI().toString(), 
                 true, //resizable
                 true, //closable
                 true, //maximizable

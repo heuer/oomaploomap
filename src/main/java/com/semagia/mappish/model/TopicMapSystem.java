@@ -22,27 +22,25 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import net.ontopia.topicmaps.core.AssociationIF;
-import net.ontopia.topicmaps.core.TopicIF;
-import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.impl.tmapi2.TopicMapImpl;
 import net.ontopia.topicmaps.io.OntopiaMapHandler;
 import net.ontopia.topicmaps.query.core.InvalidQueryException;
 import net.ontopia.topicmaps.query.core.QueryProcessorIF;
-import net.ontopia.topicmaps.query.core.QueryResultIF;
 import net.ontopia.topicmaps.query.tmql.impl.basic.TMQL4JQueryProcessor;
 import net.ontopia.topicmaps.query.utils.QueryUtils;
-import net.ontopia.topicmaps.utils.TopicStringifiers;
-import net.ontopia.utils.StringifierIF;
 
 import org.tmapi.core.Name;
 import org.tmapi.core.TMAPIException;
 import org.tmapi.core.Topic;
 import org.tmapi.core.TopicMap;
 
-import com.semagia.mappish.ImportException;
-import com.semagia.mappish.QueryException;
+import com.semagia.mappish.io.ImportException;
 import com.semagia.mappish.io.ImportUtils;
+import com.semagia.mappish.query.IResult;
+import com.semagia.mappish.query.OntopiaResult;
+import com.semagia.mappish.query.Query;
+import com.semagia.mappish.query.QueryException;
+import com.semagia.mappish.query.QueryLanguage;
 
 /**
  * 
@@ -101,7 +99,7 @@ public final class TopicMapSystem {
                     name = iter.next().getValue();
                 }
             }
-            src = new TopicMapSource(iri, name);
+            src = new TopicMapSource(uri, name);
             _sources.put(iri, src);
         }
         src.usage++;
@@ -109,7 +107,8 @@ public final class TopicMapSystem {
     }
 
     public IResult executeQuery(final ITopicMapSource src, final Query query) throws QueryException {
-        final TopicMap tm = _tmSys.getTopicMap(src.getIRI());
+        final String iri = src.getURI().toString();
+        final TopicMap tm = _tmSys.getTopicMap(iri);
         if (query.getQueryLanguage() == QueryLanguage.TOLOG) {
             return _executeTologQuery(tm, query.getQueryString());
         }
@@ -142,12 +141,13 @@ public final class TopicMapSystem {
      * @param iri
      */
     public void closeSource(final ITopicMapSource src) {
-        final TopicMapSource source = _sources.get(src.getIRI());
+        final TopicMapSource source = _sources.get(src.getURI());
         if (source != null) {
+            final String iri = src.getURI().toString();
             source.usage--;
             if (source.usage == 0) {
-                _sources.remove(src.getIRI());
-                _tmSys.getTopicMap(src.getIRI()).remove();
+                _sources.remove(src.getURI());
+                _tmSys.getTopicMap(iri).remove();
             }
         }
     }
@@ -164,17 +164,17 @@ public final class TopicMapSystem {
     
     private static class TopicMapSource implements ITopicMapSource {
 
-        private final String _iri;
+        private final URI _iri;
         private final String _name;
         private int usage;
 
-        public TopicMapSource(final String iri, final String name) {
+        public TopicMapSource(final URI iri, final String name) {
             _iri = iri;
             _name = name;
         }
 
         @Override
-        public String getIRI() {
+        public URI getURI() {
             return _iri;
         }
 
@@ -183,65 +183,6 @@ public final class TopicMapSystem {
             return _name;
         }
 
-    }
-
-    private static final class OntopiaResult implements IResult {
-
-        private QueryResultIF _result;
-        private final int _width;
-        private static final StringifierIF _TOPIC2STR = TopicStringifiers.getDefaultStringifier();
-
-        public OntopiaResult(final QueryResultIF result) {
-            _result = result;
-            _width = result.getWidth();
-        }
-
-        @Override
-        public String[] getColumnNames() {
-            return _result.getColumnNames();
-        }
-
-        /* (non-Javadoc)
-         * @see com.semagia.mappish.model.IResult#getValues()
-         */
-        @Override
-        public String[] getValues() {
-            final String[] row = new String[_width];
-            final Object[] objects = _result.getValues();
-            for (int i=0; i<_width; i++) {
-                if (objects[i] instanceof TopicIF) {
-                    row[i] = _TOPIC2STR.toString(objects[i]);
-                }
-                else if (objects[i] instanceof AssociationIF) {
-                    row[i] = "Association type='" + _TOPIC2STR.toString(((AssociationIF) objects[i]).getType()); 
-                }
-                else if (objects[i] instanceof TopicNameIF) {
-                    row[i] = ((TopicNameIF) objects[i]).getValue();
-                }
-                else {
-                    row[i] = objects[i].toString();
-                }
-            }
-            return row;
-        }
-
-        /* (non-Javadoc)
-         * @see com.semagia.mappish.model.IResult#next()
-         */
-        @Override
-        public boolean next() {
-            return _result.next();
-        }
-
-        /* (non-Javadoc)
-         * @see com.semagia.mappish.model.IResult#close()
-         */
-        @Override
-        public void close() {
-            _result.close();
-            _result = null;
-        }
-        
     }
 
 }

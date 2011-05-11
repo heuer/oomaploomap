@@ -21,7 +21,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.semagia.mappish.ImportException;
 import com.semagia.mio.DeserializerRegistry;
 import com.semagia.mio.IDeserializer;
 import com.semagia.mio.IMapHandler;

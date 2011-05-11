@@ -37,11 +37,11 @@ import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.Task;
 
 import com.semagia.mappish.io.FileUtils;
-import com.semagia.mappish.model.IResult;
 import com.semagia.mappish.model.ITopicMapSource;
-import com.semagia.mappish.model.Query;
-import com.semagia.mappish.model.QueryLanguage;
 import com.semagia.mappish.model.TopicMapSystem;
+import com.semagia.mappish.query.IResult;
+import com.semagia.mappish.query.Query;
+import com.semagia.mappish.query.QueryLanguage;
 import com.semagia.mappish.ui.IQueryView;
 import com.semagia.mappish.ui.QueryFrame;
 import com.semagia.mappish.ui.ToolBar;

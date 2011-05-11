@@ -15,6 +15,8 @@
  */
 package com.semagia.mappish.model;
 
+import com.semagia.mappish.query.QueryLanguage;
+
 import junit.framework.TestCase;
 
 /**
