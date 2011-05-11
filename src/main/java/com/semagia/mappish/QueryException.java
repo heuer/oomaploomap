@@ -22,8 +22,10 @@ package com.semagia.mappish;
  */
 public class QueryException extends Exception {
 
-    public QueryException(Exception ex) {
-        // TODO Auto-generated constructor stub
+    private static final long serialVersionUID = 1L;
+
+    public QueryException(final Throwable cause) {
+        super(cause);
     }
 
 }
