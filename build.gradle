@@ -17,7 +17,7 @@ licenseName = 'Apache Software License, Version 2.0'
 licenseURL = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
 
 apply plugin: 'java'
-apply plugin:'application'
+apply plugin: 'application'
 apply plugin: 'maven'
 apply plugin: 'eclipse'
 
