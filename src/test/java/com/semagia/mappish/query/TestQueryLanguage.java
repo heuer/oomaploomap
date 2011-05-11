@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.semagia.mappish.model;
-
-import com.semagia.mappish.query.QueryLanguage;
+package com.semagia.mappish.query;
 
 import junit.framework.TestCase;
 
