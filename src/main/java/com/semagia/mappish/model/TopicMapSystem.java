@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import net.ontopia.topicmaps.core.TopicMapIF;
 import net.ontopia.topicmaps.impl.tmapi2.TopicMapImpl;
 import net.ontopia.topicmaps.io.OntopiaMapHandler;
 import net.ontopia.topicmaps.query.core.InvalidQueryException;
@@ -109,30 +110,15 @@ public final class TopicMapSystem {
 
     public IResult executeQuery(final ITopicMapSource src, final Query query) throws QueryException {
         final String iri = src.getURI().toString();
-        final TopicMap tm = _tmSys.getTopicMap(iri);
+        final TopicMapIF tm = ((TopicMapImpl) _tmSys.getTopicMap(iri)).getWrapped();
+        final String q = query.getQueryString();
         final QueryLanguage lang = query.getQueryLanguage();
-        if (lang == QueryLanguage.TOLOG) {
-            return _executeTologQuery(tm, query.getQueryString());
-        }
-        else if (lang == QueryLanguage.TOMA) {
-            return _executeTomaQuery(tm, query.getQueryString());
-        }
-        else if (lang == QueryLanguage.TMQL) {
-            return _executeTMQLQuery(tm, query.getQueryString());
+        switch (lang) {
+            case TOLOG: return _runQuery(QueryUtils.createQueryProcessor(tm), q);
+            case TMQL: return _runQuery(new TMQL4JQueryProcessor(tm), q);
+            case TOMA: return _runQuery(new BasicQueryProcessor(tm), q);
         }
         throw new QueryException("Unknown query language " + lang.name());
-    }
-
-    private IResult _executeTMQLQuery(final TopicMap tm, final String query) throws QueryException {
-        return _runQuery(new TMQL4JQueryProcessor(((TopicMapImpl) tm).getWrapped()), query);
-    }
-
-    private IResult _executeTologQuery(final TopicMap tm, String query) throws QueryException {
-        return _runQuery(QueryUtils.createQueryProcessor(((TopicMapImpl) tm).getWrapped()), query);
-    }
-
-    private IResult _executeTomaQuery(final TopicMap tm, String query) throws QueryException {
-        return _runQuery(new BasicQueryProcessor(((TopicMapImpl) tm).getWrapped()), query);
     }
 
     private IResult _runQuery(final QueryProcessorIF proc, final String query) throws QueryException {
@@ -143,8 +129,6 @@ public final class TopicMapSystem {
             throw new QueryException(ex);
         }
     }
-
-    
 
     /**
      * 
