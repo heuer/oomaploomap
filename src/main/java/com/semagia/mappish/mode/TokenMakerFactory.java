@@ -39,6 +39,7 @@ public class TokenMakerFactory extends AbstractTokenMakerFactory {
         map.put(SyntaxConstants.SYNTAX_STYLE_NONE, "org.fife.ui.rsyntaxtextarea.modes.PlainTextTokenMaker");
         map.put(QueryLanguage.TMQL.name(), "com.semagia.mappish.mode.TMQLTokenMaker");
         map.put(QueryLanguage.TOLOG.name(), "com.semagia.mappish.mode.TologTokenMaker");
+        map.put(QueryLanguage.TOMA.name(), "com.semagia.mappish.mode.TomaTokenMaker");
         return map;
     }
 
