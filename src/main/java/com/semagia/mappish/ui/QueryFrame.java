@@ -45,7 +45,7 @@ public final class QueryFrame extends JInternalFrame implements IQueryView {
      * @param tmSrc 
      */
     public QueryFrame(final Application app, final ITopicMapSource tmSrc) {
-        super(tmSrc.getName() != null ? tmSrc.getName() + " (" + tmSrc.getURI() + ")" : tmSrc.getURI().toString(), 
+        super(tmSrc.getName() != null ? tmSrc.getName() + " -- " + tmSrc.getURI() : tmSrc.getURI().toString(), 
                 true, //resizable
                 true, //closable
                 true, //maximizable
