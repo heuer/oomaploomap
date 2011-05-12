@@ -26,9 +26,8 @@ import net.ontopia.topicmaps.core.TopicMapIF;
 import net.ontopia.topicmaps.impl.tmapi2.TopicMapImpl;
 import net.ontopia.topicmaps.io.OntopiaMapHandler;
 import net.ontopia.topicmaps.query.core.InvalidQueryException;
+import net.ontopia.topicmaps.query.core.QueryProcessorFactoryIF;
 import net.ontopia.topicmaps.query.core.QueryProcessorIF;
-import net.ontopia.topicmaps.query.tmql.impl.basic.TMQL4JQueryProcessor;
-import net.ontopia.topicmaps.query.toma.impl.basic.BasicQueryProcessor;
 import net.ontopia.topicmaps.query.utils.QueryUtils;
 
 import org.tmapi.core.Name;
@@ -42,7 +41,6 @@ import com.semagia.mappish.query.IResult;
 import com.semagia.mappish.query.OntopiaResult;
 import com.semagia.mappish.query.Query;
 import com.semagia.mappish.query.QueryException;
-import com.semagia.mappish.query.QueryLanguage;
 
 /**
  * 
@@ -111,14 +109,11 @@ public final class TopicMapSystem {
     public IResult executeQuery(final ITopicMapSource src, final Query query) throws QueryException {
         final String iri = src.getURI().toString();
         final TopicMapIF tm = ((TopicMapImpl) _tmSys.getTopicMap(iri)).getWrapped();
-        final String q = query.getQueryString();
-        final QueryLanguage lang = query.getQueryLanguage();
-        switch (lang) {
-            case TOLOG: return _runQuery(QueryUtils.createQueryProcessor(tm), q);
-            case TMQL: return _runQuery(new TMQL4JQueryProcessor(tm), q);
-            case TOMA: return _runQuery(new BasicQueryProcessor(tm), q);
+        final QueryProcessorFactoryIF procFactory = QueryUtils.getQueryProcessorFactory(query.getQueryLanguage().name());
+        if (procFactory == null) {
+            throw new QueryException("Unknown query language " + query.getQueryLanguage());
         }
-        throw new QueryException("Unknown query language " + lang.name());
+        return _runQuery(procFactory.createQueryProcessor(tm, null, null), query.getQueryString());
     }
 
     private IResult _runQuery(final QueryProcessorIF proc, final String query) throws QueryException {
@@ -157,7 +152,7 @@ public final class TopicMapSystem {
     }
 
     
-    private static class TopicMapSource implements ITopicMapSource {
+    private static final class TopicMapSource implements ITopicMapSource {
 
         private final URI _iri;
         private final String _name;
