@@ -27,6 +27,7 @@ import net.ontopia.topicmaps.io.OntopiaMapHandler;
 import net.ontopia.topicmaps.query.core.InvalidQueryException;
 import net.ontopia.topicmaps.query.core.QueryProcessorIF;
 import net.ontopia.topicmaps.query.tmql.impl.basic.TMQL4JQueryProcessor;
+import net.ontopia.topicmaps.query.toma.impl.basic.BasicQueryProcessor;
 import net.ontopia.topicmaps.query.utils.QueryUtils;
 
 import org.tmapi.core.Name;
@@ -109,10 +110,17 @@ public final class TopicMapSystem {
     public IResult executeQuery(final ITopicMapSource src, final Query query) throws QueryException {
         final String iri = src.getURI().toString();
         final TopicMap tm = _tmSys.getTopicMap(iri);
-        if (query.getQueryLanguage() == QueryLanguage.TOLOG) {
+        final QueryLanguage lang = query.getQueryLanguage();
+        if (lang == QueryLanguage.TOLOG) {
             return _executeTologQuery(tm, query.getQueryString());
         }
-        return _executeTMQLQuery(tm, query.getQueryString());
+        else if (lang == QueryLanguage.TOMA) {
+            return _executeTomaQuery(tm, query.getQueryString());
+        }
+        else if (lang == QueryLanguage.TMQL) {
+            return _executeTMQLQuery(tm, query.getQueryString());
+        }
+        throw new QueryException("Unknown query language " + lang.name());
     }
 
     private IResult _executeTMQLQuery(final TopicMap tm, final String query) throws QueryException {
@@ -121,7 +129,10 @@ public final class TopicMapSystem {
 
     private IResult _executeTologQuery(final TopicMap tm, String query) throws QueryException {
         return _runQuery(QueryUtils.createQueryProcessor(((TopicMapImpl) tm).getWrapped()), query);
+    }
 
+    private IResult _executeTomaQuery(final TopicMap tm, String query) throws QueryException {
+        return _runQuery(new BasicQueryProcessor(((TopicMapImpl) tm).getWrapped()), query);
     }
 
     private IResult _runQuery(final QueryProcessorIF proc, final String query) throws QueryException {

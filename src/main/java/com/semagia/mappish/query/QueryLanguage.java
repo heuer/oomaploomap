@@ -57,6 +57,9 @@ public enum QueryLanguage {
         else if ("tl".equalsIgnoreCase(ext)) {
             return TOLOG;
         }
+        else if ("ta".equalsIgnoreCase(ext)) {
+            return TOMA;
+        }
         throw new IllegalArgumentException("Unknown extension '" + ext + "'");
     }
 

@@ -57,7 +57,7 @@ public final class Mappish extends SingleFrameApplication {
             "Topic Maps (*.ctm, *.ltm, *.xtm)", "ctm", "ltm", "xtm");
 
     private static final FileFilter _QL_FILE_FILTER = new FileNameExtensionFilter(
-            "Topic Maps Query (*.tq, *.tl)", "tq", "tl");
+            "Topic Maps Query (*.tq, *.tl, *.ta)", "tq", "tl", "ta");
 
     static {
         System.setProperty(TokenMakerFactory.PROPERTY_DEFAULT_TOKEN_MAKER_FACTORY, com.semagia.mappish.mode.TokenMakerFactory.class.getName());
@@ -152,6 +152,11 @@ public final class Mappish extends SingleFrameApplication {
     @Action
     public void queryLanguageTMQL() {
         _setQueryLanguage(QueryLanguage.TMQL);
+    }
+
+    @Action
+    public void queryLanguageToma() {
+        _setQueryLanguage(QueryLanguage.TOMA);
     }
 
     private void _setQueryLanguage(final QueryLanguage lang) {

@@ -24,7 +24,7 @@ import org.fife.ui.rsyntaxtextarea.DefaultToken;
 import org.fife.ui.rsyntaxtextarea.Token;
 
 /**
- * Tolog tokenizer.
+ * Toma tokenizer.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
@@ -32,7 +32,7 @@ import org.fife.ui.rsyntaxtextarea.Token;
 %%
 
 %public
-%class TologTokenMaker
+%class TomaTokenMaker
 %unicode
 %extends AbstractJFlexTokenMaker
 %caseless
@@ -40,7 +40,7 @@ import org.fife.ui.rsyntaxtextarea.Token;
 %type org.fife.ui.rsyntaxtextarea.Token
 
 %{
-    public TologTokenMaker() {
+    public TomaTokenMaker() {
         super();
     }
 
@@ -150,94 +150,97 @@ import org.fife.ui.rsyntaxtextarea.Token;
 LineTerminator  = \r|\n|\r\n
 Whitespace      = {LineTerminator} | [ \t\f]
 
-IdentifierStart = [a-zA-Z_] | [\u00C0-\u00D6] | [\u00D8-\u00F6] 
-                            | [\u00F8-\u02FF] | [\u0370-\u037D] 
-                            | [\u037F-\u1FFF] | [\u200C-\u200D] 
-                            | [\u2070-\u218F] | [\u2C00-\u2FEF] 
-                            | [\u3001-\uD7FF] | [\uF900-\uFDCF] 
-                            | [\uFDF0-\uFFFD] 
-                            //| [\u10000-\uEFFFF]
-IdentifierChar  = {IdentifierStart} | [\-\.0-9] | \u00B7 | [\u0300-\u036F] 
-                                                | [\u203F-\u2040]
-Identifier      = {IdentifierStart}{IdentifierChar}*
+Identifier      = [A-Za-z][A-Za-z0-9_\-]*
 Variable        = "$"{Identifier}
 
-Separator       = [,.:\-\?]
+Separator       = [@\(\)\[\];,\.]
 
-QName           = {Identifier}":"([0-9]|{IdentifierStart}){IdentifierChar}*
-
-String          = \"([^\"]|\"\")*\"
+String          = '[^\']*'
 Integer         = ("-" | "+")? [0-9]+
 Decimal         = ("-" | "+")? ( [0-9]+ \. [0-9]+ | \. ([0-9])+ )
+
+Comment         = "#"[^\r\n]*
 
 %%
 
 {Whitespace}+           { addToken(Token.WHITESPACE); }
+{Comment}               { addToken(Token.COMMENT_EOL); }
 
 <YYINITIAL> {
     // Keywords
-    "using"
-    | "for"
-    | "import"
-    | "as"
-    | "select"
-    | "from"
-    | "merge"
-    | "delete"
-    | "update"
+    "select"
+    | "where"
+    | "not"
+    | "exists"
+    | "is"
+    | "null"
+    | "all"
+    | "distinct"
     | "limit"
     | "offset"
     | "order"
     | "by"
     | "asc"
-    | "desc"            { addToken(Token.RESERVED_WORD); }
-    
-    // Predicates
-    "association"
-    | "association-role"
-    | "base-locator"
-    | "datatype"
-    | "direct-instance-of"
-    | "instance-of"
-    | "item-identifier"
-    | "object-id"
-    | "occurrence"
-    | "reifies"
-    | "resource"
-    | "role-player"
-    | "scope"
-    | "subject-identifier"
-    | "subject-locator"
-    | "topic"
-    | "topic-name"
-    | "topicmap"
+    | "desc"
+    | "union" 
+    | "all"
+    | "intersect"
+    | "except"
+    | "and"
+    | "or"
+    | "id"
+    | "sl"
+    | "si"
+    | "name"
+    | "var"
+    | "oc"
+    | "ref"
+    | "data"
+    | "sc"
+    | "player"
+    | "role"
+    | "reifier"
     | "type"
-    | "value"
-    | "value-like"
-    | "variant"
-    | "not"
-    | "count"
-    | "coalesce"        { addToken(Token.FUNCTION); }
+    | "instance"
+    | "sub"
+    | "super"              { addToken(Token.RESERVED_WORD); }
     
-    "/="
-    | "<"
-    | "<="
+    "count" 
+    | "sum" 
+    | "max" 
+    | "min" 
+    | "avg" 
+    | "concat"
+    | "lowercase" 
+    | "uppercase" 
+    | "titlecase" 
+    | "length" 
+    | "substr" 
+    | "trim" 
+    | "to_num"          { addToken(Token.FUNCTION); }
+
+
+    "!="
     | "="
+    | "<"
     | ">"
+    | "<="
     | ">="
+    | "~"
+    | "~*"
+    | "!~"
+    | "!~*"
+    | "->"
+    | "||"
     | "*"               { addToken(Token.OPERATOR); }
 
-
-    {QName}             { addToken(Token.IDENTIFIER); }
     {Identifier}        { addToken(Token.IDENTIFIER); }
+    "$$"                { addToken(Token.VARIABLE); }
     {Variable}          { addToken(Token.VARIABLE); }
 
     // Datatypes
     {String}            { addToken(Token.LITERAL_STRING_DOUBLE_QUOTE); }
-//    {IRI}               { return _token(TokenTypes.IRI, 1, 1); }
-//    {Date}              { return _token(TokenTypes.DATE); }
-//    {DateTime}          { return _token(TokenTypes.DATE_TIME); }
-    {Integer}|{Decimal} { addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
+    {Integer}           { addToken(Token.LITERAL_NUMBER_DECIMAL_INT); }
 
     // Delimiters
     {Separator}         { addToken(Token.SEPARATOR); }

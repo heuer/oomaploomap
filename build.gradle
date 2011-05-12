@@ -4,7 +4,7 @@
 import static groovy.io.FileType.*
 
 group = 'com.semagia.mappish'
-version = '0.0.1'
+version = '0.0.2'
 bundleVersion = version
 
 projectName = 'Oomap Loomap'
@@ -96,7 +96,8 @@ dependencies {
             'net.ontopia:ontopia-engine:5.1.3',
             'de.topicmapslab.tmql4j:tmql4j-path:3.1.0',
             'de.topicmapslab.tmql4j:tmql4ontopia:2.6.5',
-            'net.ontopia:ontopia-mio:0.1.0-SNAPSHOT'
+            'net.ontopia:ontopia-mio:0.1.0-SNAPSHOT',
+            'net.ontopia:toma:1.0.1'
 
     runtime 'org.tmapi:tmapi:(2.0.2,)',
             'de.topicmapslab.tmql4j:tmql4j-flwr:3.1.0',

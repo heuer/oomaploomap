@@ -124,6 +124,7 @@ final class DefaultQueryView extends View implements IQueryView {
         final JMenu queryLanguageMenu = new JMenu("Query Language");
         queryLanguageMenu.add(getApplication().getContext().getActionMap().get("queryLanguageTMQL"));
         queryLanguageMenu.add(getApplication().getContext().getActionMap().get("queryLanguageTolog"));
+        queryLanguageMenu.add(getApplication().getContext().getActionMap().get("queryLanguageToma"));
         _queryEditor.getPopupMenu().add(queryLanguageMenu);
         _queryEditor.setTabsEmulated(true);
         _queryEditor.setWhitespaceVisible(true);
