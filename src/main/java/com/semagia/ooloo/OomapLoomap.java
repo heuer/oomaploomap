@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.semagia.mappish;
+package com.semagia.ooloo;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -36,23 +36,23 @@ import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.Task;
 
-import com.semagia.mappish.io.FileUtils;
-import com.semagia.mappish.model.ITopicMapSystem;
-import com.semagia.mappish.model.ITopicMapSystem.ITopicMapSource;
-import com.semagia.mappish.model.OntopiaTopicMapSystem;
-import com.semagia.mappish.query.IResult;
-import com.semagia.mappish.query.Query;
-import com.semagia.mappish.query.QueryLanguage;
-import com.semagia.mappish.ui.IQueryView;
-import com.semagia.mappish.ui.QueryFrame;
-import com.semagia.mappish.ui.ToolBar;
+import com.semagia.ooloo.io.FileUtils;
+import com.semagia.ooloo.model.ITopicMapSystem;
+import com.semagia.ooloo.model.OntopiaTopicMapSystem;
+import com.semagia.ooloo.model.ITopicMapSystem.ITopicMapSource;
+import com.semagia.ooloo.query.IResult;
+import com.semagia.ooloo.query.Query;
+import com.semagia.ooloo.query.QueryLanguage;
+import com.semagia.ooloo.ui.IQueryView;
+import com.semagia.ooloo.ui.QueryFrame;
+import com.semagia.ooloo.ui.ToolBar;
 
 /**
  * Main application.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
-public final class Mappish extends SingleFrameApplication {
+public final class OomapLoomap extends SingleFrameApplication {
 
     private static final FileFilter _TM_FILE_FILTER = new FileNameExtensionFilter(
             "Topic Maps (*.ctm, *.jtm, *.ltm, *.xtm)", "ctm", "jtm", "ltm", "xtm");
@@ -63,7 +63,7 @@ public final class Mappish extends SingleFrameApplication {
     static {
         // Replace the default token maker 
         System.setProperty(TokenMakerFactory.PROPERTY_DEFAULT_TOKEN_MAKER_FACTORY, 
-                com.semagia.mappish.mode.TokenMakerFactory.class.getName());
+                com.semagia.ooloo.mode.TokenMakerFactory.class.getName());
     }
 
     private JDesktopPane _desktop;
@@ -75,13 +75,13 @@ public final class Mappish extends SingleFrameApplication {
 
     private InternalFrameListener _frameListener;
 
-    private Mappish() {
+    private OomapLoomap() {
         _tmSys = new OntopiaTopicMapSystem();
         _frameListener = new FrameListener();
     }
 
     public static void main(final String[] args) throws Exception {
-        Application.launch(Mappish.class, args);
+        Application.launch(OomapLoomap.class, args);
     }
 
     /* (non-Javadoc)

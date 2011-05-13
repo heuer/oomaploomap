@@ -13,32 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.semagia.mappish.query;
-
-import junit.framework.TestCase;
+package com.semagia.ooloo.query;
 
 /**
  * 
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
-public class TestQueryLanguage extends TestCase {
+public interface IResult {
 
-    public void testByExtension() {
-        assertEquals(QueryLanguage.TMQL, QueryLanguage.fromExtension("tq"));
-        assertEquals(QueryLanguage.TOLOG, QueryLanguage.fromExtension("tl"));
-        assertEquals(QueryLanguage.TMQL, QueryLanguage.fromExtension("tQ"));
-        assertEquals(QueryLanguage.TOLOG, QueryLanguage.fromExtension("tL"));
-    }
+    public void close();
 
-    public void testByExtensionTologIllegal() {
-        try {
-            QueryLanguage.fromExtension("tlo");
-            fail("Expected an IAE");
-        }
-        catch (IllegalArgumentException ex) {
-            
-        }
-    }
+    public String[] getColumnNames();
+
+    public String[] getValues();
+
+    public boolean next();
 
 }

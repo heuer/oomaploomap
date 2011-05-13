@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.semagia.mappish.model;
+package com.semagia.ooloo.model;
 
 import java.io.IOException;
 import java.net.URI;
 
-import com.semagia.mappish.query.IResult;
-import com.semagia.mappish.query.Query;
-import com.semagia.mappish.query.QueryException;
+import com.semagia.ooloo.query.IResult;
+import com.semagia.ooloo.query.Query;
+import com.semagia.ooloo.query.QueryException;
 
 /**
  * The topic map system keeps track about the loaded topic maps and can issue

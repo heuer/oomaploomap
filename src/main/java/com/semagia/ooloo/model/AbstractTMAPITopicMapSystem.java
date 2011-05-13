@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.semagia.mappish.model;
+package com.semagia.ooloo.model;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,11 +28,11 @@ import org.tmapi.core.TopicMap;
 import org.tmapi.core.TopicMapExistsException;
 import org.tmapi.core.TopicMapSystem;
 
-import com.semagia.mappish.io.ImportUtils;
-import com.semagia.mappish.query.IResult;
-import com.semagia.mappish.query.Query;
-import com.semagia.mappish.query.QueryException;
 import com.semagia.mio.IMapHandler;
+import com.semagia.ooloo.io.ImportUtils;
+import com.semagia.ooloo.query.IResult;
+import com.semagia.ooloo.query.Query;
+import com.semagia.ooloo.query.QueryException;
 
 /**
  * 

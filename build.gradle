@@ -3,8 +3,8 @@
  */
 import static groovy.io.FileType.*
 
-group = 'com.semagia.mappish'
-version = '0.0.2'
+group = 'com.semagia.ooloo'
+version = '0.0.3'
 bundleVersion = version
 
 projectName = 'Oomap Loomap'
@@ -25,7 +25,7 @@ sourceCompatibility = '1.6'
 
 defaultTasks 'clean', 'build'
 
-mainClassName = 'com.semagia.mappish.Mappish'
+mainClassName = 'com.semagia.ooloo.OomapLoomap'
 
 eclipseClasspath.downloadSources = false
 
@@ -115,7 +115,7 @@ task generateLexers << {
     def grammarDir = new File('src/grammar/')
     grammarDir.eachFileMatch FILES, ~/.+?\.flex/, {
       ant.jflex file: 'src/grammar/' + it.name, destdir: 'src/main/java/'
-      remove_jflex_methods(new File('src/main/java/com/semagia/mappish/mode/' + it.name.replace('.flex', '.java')))
+      remove_jflex_methods(new File('src/main/java/com/semagia/ooloo/mode/' + it.name.replace('.flex', '.java')))
     }
 }
 

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.semagia.mappish.ui;
+package com.semagia.ooloo.ui;
 
-import com.semagia.mappish.model.ITopicMapSystem.ITopicMapSource;
-import com.semagia.mappish.query.IResult;
-import com.semagia.mappish.query.Query;
+import com.semagia.ooloo.model.ITopicMapSystem.ITopicMapSource;
+import com.semagia.ooloo.query.IResult;
+import com.semagia.ooloo.query.Query;
 
 /**
  * 

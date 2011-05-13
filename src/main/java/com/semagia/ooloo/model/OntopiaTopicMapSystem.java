@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.semagia.mappish.model;
+package com.semagia.ooloo.model;
 
 import org.tmapi.core.TMAPIException;
 import org.tmapi.core.TopicMap;
@@ -32,10 +32,10 @@ import net.ontopia.topicmaps.query.utils.QueryUtils;
 import net.ontopia.topicmaps.utils.TopicStringifiers;
 import net.ontopia.utils.StringifierIF;
 
-import com.semagia.mappish.query.IResult;
-import com.semagia.mappish.query.Query;
-import com.semagia.mappish.query.QueryException;
 import com.semagia.mio.IMapHandler;
+import com.semagia.ooloo.query.IResult;
+import com.semagia.ooloo.query.Query;
+import com.semagia.ooloo.query.QueryException;
 
 /**
  * {@link ITopicMapSystem} implementation that uses Ontopia.

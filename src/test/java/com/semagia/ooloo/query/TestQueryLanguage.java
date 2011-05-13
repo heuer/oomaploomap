@@ -13,23 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.semagia.mappish.query;
+package com.semagia.ooloo.query;
+
+import junit.framework.TestCase;
 
 /**
  * 
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
-public class QueryException extends Exception {
+public class TestQueryLanguage extends TestCase {
 
-    private static final long serialVersionUID = 1L;
-
-    public QueryException(final String msg) {
-        super(msg);
+    public void testByExtension() {
+        assertEquals(QueryLanguage.TMQL, QueryLanguage.fromExtension("tq"));
+        assertEquals(QueryLanguage.TOLOG, QueryLanguage.fromExtension("tl"));
+        assertEquals(QueryLanguage.TMQL, QueryLanguage.fromExtension("tQ"));
+        assertEquals(QueryLanguage.TOLOG, QueryLanguage.fromExtension("tL"));
     }
 
-    public QueryException(final Throwable cause) {
-        super(cause);
+    public void testByExtensionTologIllegal() {
+        try {
+            QueryLanguage.fromExtension("tlo");
+            fail("Expected an IAE");
+        }
+        catch (IllegalArgumentException ex) {
+            
+        }
     }
 
 }

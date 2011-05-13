@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.semagia.mappish.ui;
+package com.semagia.ooloo.ui;
 
 import javax.swing.ActionMap;
 import javax.swing.JButton;
