@@ -72,8 +72,11 @@ public final class Mappish extends SingleFrameApplication {
 
     private JProgressBar _progressBar;
 
+    private InternalFrameListener _frameListener;
+
     private Mappish() {
         _tmSys = new TopicMapSystem();
+        _frameListener = new FrameListener();
     }
 
     public static void main(final String[] args) throws Exception {
@@ -348,7 +351,7 @@ public final class Mappish extends SingleFrameApplication {
             final QueryFrame frame = new QueryFrame(getApplication(), source);
             _desktop.add(frame);
             _desktop.setSelectedFrame(frame);
-            frame.addInternalFrameListener(new FrameListener());
+            frame.addInternalFrameListener(_frameListener);
             frame.setVisible(true);
         }
     }
