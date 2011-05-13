@@ -15,7 +15,6 @@
  */
 package com.semagia.ooloo.model;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
@@ -94,7 +93,7 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
             catch (TopicMapExistsException ex) {
                 // Shouldn't happen
             }
-            ImportUtils.importTopicMap(new File(uri), createMapHandler(tm));
+            ImportUtils.importTopicMap(uri, createMapHandler(tm));
             String name = null;
             final Topic reifier = tm.getReifier();
             if (reifier != null) {
