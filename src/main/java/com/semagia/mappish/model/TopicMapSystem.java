@@ -22,13 +22,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicMapIF;
+import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.impl.tmapi2.TopicMapImpl;
 import net.ontopia.topicmaps.io.OntopiaMapHandler;
 import net.ontopia.topicmaps.query.core.InvalidQueryException;
 import net.ontopia.topicmaps.query.core.QueryProcessorFactoryIF;
 import net.ontopia.topicmaps.query.core.QueryProcessorIF;
+import net.ontopia.topicmaps.query.core.QueryResultIF;
 import net.ontopia.topicmaps.query.utils.QueryUtils;
+import net.ontopia.topicmaps.utils.TopicStringifiers;
+import net.ontopia.utils.StringifierIF;
 
 import org.tmapi.core.Name;
 import org.tmapi.core.TMAPIException;
@@ -38,7 +43,6 @@ import org.tmapi.core.TopicMap;
 import com.semagia.mappish.io.ImportException;
 import com.semagia.mappish.io.ImportUtils;
 import com.semagia.mappish.query.IResult;
-import com.semagia.mappish.query.OntopiaResult;
 import com.semagia.mappish.query.Query;
 import com.semagia.mappish.query.QueryException;
 
@@ -175,5 +179,70 @@ public final class TopicMapSystem {
         }
 
     }
+
+    /**
+     * {@link IResult} implementation that adapts a {@link QueryResultIF}.
+     * 
+     * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
+     */
+    private static class OntopiaResult implements IResult {
+
+        private QueryResultIF _result;
+        private final int _width;
+        private static final StringifierIF _TOPIC2STR = TopicStringifiers.getDefaultStringifier();
+
+        public OntopiaResult(final QueryResultIF result) {
+            _result = result;
+            _width = result.getWidth();
+        }
+
+        /* (non-Javadoc)
+         * @see com.semagia.mappish.query.IResult#getColumnNames()
+         */
+        @Override
+        public String[] getColumnNames() {
+            return _result.getColumnNames();
+        }
+
+        /* (non-Javadoc)
+         * @see com.semagia.mappish.query.IResult#getValues()
+         */
+        @Override
+        public String[] getValues() {
+            final String[] row = new String[_width];
+            final Object[] objects = _result.getValues();
+            for (int i=0; i<_width; i++) {
+                if (objects[i] instanceof TopicIF) {
+                    row[i] = _TOPIC2STR.toString(objects[i]);
+                }
+                else if (objects[i] instanceof TopicNameIF) {
+                    row[i] = ((TopicNameIF) objects[i]).getValue();
+                }
+                else {
+                    row[i] = objects[i].toString();
+                }
+            }
+            return row;
+        }
+
+        /* (non-Javadoc)
+         * @see com.semagia.mappish.query.IResult#next()
+         */
+        @Override
+        public boolean next() {
+            return _result.next();
+        }
+
+        /* (non-Javadoc)
+         * @see com.semagia.mappish.query.IResult#close()
+         */
+        @Override
+        public void close() {
+            _result.close();
+            _result = null;
+        }
+
+    }
+
 
 }
