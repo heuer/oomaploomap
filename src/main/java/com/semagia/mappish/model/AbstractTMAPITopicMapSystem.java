@@ -83,6 +83,7 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
     /* (non-Javadoc)
      * @see com.semagia.mappish.model.ITopicMapSystem#loadSource(java.net.URI)
      */
+    @Override
     public ITopicMapSource loadSource(final URI uri) throws ImportException, IOException {
         final String iri = uri.toString();
         TopicMapSource src = _sources.get(iri);
@@ -110,6 +111,10 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
         return src;
     }
 
+    /* (non-Javadoc)
+     * @see com.semagia.mappish.model.ITopicMapSystem#executeQuery(com.semagia.mappish.model.ITopicMapSystem.ITopicMapSource, com.semagia.mappish.query.Query)
+     */
+    @Override
     public IResult executeQuery(final ITopicMapSource src, final Query query) throws QueryException {
         final String iri = src.getURI().toString();
         return executeQuery(_tmSys.getTopicMap(iri), query);
