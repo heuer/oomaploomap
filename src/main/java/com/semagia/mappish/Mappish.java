@@ -38,7 +38,8 @@ import org.jdesktop.application.Task;
 
 import com.semagia.mappish.io.FileUtils;
 import com.semagia.mappish.model.ITopicMapSource;
-import com.semagia.mappish.model.TopicMapSystem;
+import com.semagia.mappish.model.ITopicMapSystem;
+import com.semagia.mappish.model.OntopiaTopicMapSystem;
 import com.semagia.mappish.query.IResult;
 import com.semagia.mappish.query.Query;
 import com.semagia.mappish.query.QueryLanguage;
@@ -68,14 +69,14 @@ public final class Mappish extends SingleFrameApplication {
     private JDesktopPane _desktop;
     private String _lastDirectory;
 
-    private TopicMapSystem _tmSys;
+    private ITopicMapSystem _tmSys;
 
     private JProgressBar _progressBar;
 
     private InternalFrameListener _frameListener;
 
     private Mappish() {
-        _tmSys = new TopicMapSystem();
+        _tmSys = new OntopiaTopicMapSystem();
         _frameListener = new FrameListener();
     }
 
