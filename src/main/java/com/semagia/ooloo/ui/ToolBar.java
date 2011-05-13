@@ -22,7 +22,7 @@ import javax.swing.JToolBar;
 import org.jdesktop.application.Application;
 
 /**
- * 
+ * Utility functions to create {@link JToolBar}s.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
@@ -32,6 +32,14 @@ public final class ToolBar {
         super();
     }
 
+    /**
+     * Creates a toolbar from the provided action names {@code ---} indicates a separator.
+     * 
+     * 
+     * @param app The application.
+     * @param actionNames Action names.
+     * @return A toolbar.
+     */
     public static JToolBar fromActions(final Application app, final String[] actionNames) {
         final ActionMap actionMap = app.getContext().getActionMap();
         final JToolBar toolBar = new JToolBar();

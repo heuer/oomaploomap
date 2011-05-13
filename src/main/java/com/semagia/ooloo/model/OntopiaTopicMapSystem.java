@@ -59,7 +59,7 @@ public final class OntopiaTopicMapSystem extends AbstractTMAPITopicMapSystem {
     }
 
     /* (non-Javadoc)
-     * @see com.semagia.mappish.model.AbstractTMAPITopicMapSystem#getTopicMapSystem()
+     * @see com.semagia.ooloo.model.AbstractTMAPITopicMapSystem#createTopicMapSystem()
      */
     @Override
     protected TopicMapSystem createTopicMapSystem() {
@@ -72,7 +72,7 @@ public final class OntopiaTopicMapSystem extends AbstractTMAPITopicMapSystem {
     }
 
     /* (non-Javadoc)
-     * @see com.semagia.mappish.model.AbstractTMAPITopicMapSystem#createMapHandler(org.tmapi.core.TopicMap)
+     * @see com.semagia.ooloo.model.AbstractTMAPITopicMapSystem#createMapHandler(org.tmapi.core.TopicMap)
      */
     @Override
     protected IMapHandler createMapHandler(final TopicMap tm) {
@@ -80,7 +80,7 @@ public final class OntopiaTopicMapSystem extends AbstractTMAPITopicMapSystem {
     }
 
     /* (non-Javadoc)
-     * @see com.semagia.mappish.model.AbstractTMAPITopicMapSystem#executeQuery(org.tmapi.core.TopicMap, com.semagia.mappish.query.Query)
+     * @see com.semagia.ooloo.model.AbstractTMAPITopicMapSystem#executeQuery(org.tmapi.core.TopicMap, com.semagia.ooloo.query.Query)
      */
     @Override
     public IResult executeQuery(final TopicMap topicMap, final Query query) throws QueryException {
@@ -113,7 +113,7 @@ public final class OntopiaTopicMapSystem extends AbstractTMAPITopicMapSystem {
         }
 
         /* (non-Javadoc)
-         * @see com.semagia.mappish.query.IResult#getColumnNames()
+         * @see com.semagia.ooloo.query.IResult#getColumnNames()
          */
         @Override
         public String[] getColumnNames() {
@@ -121,7 +121,7 @@ public final class OntopiaTopicMapSystem extends AbstractTMAPITopicMapSystem {
         }
 
         /* (non-Javadoc)
-         * @see com.semagia.mappish.query.IResult#getValues()
+         * @see com.semagia.ooloo.query.IResult#getValues()
          */
         @Override
         public String[] getValues() {
@@ -142,7 +142,7 @@ public final class OntopiaTopicMapSystem extends AbstractTMAPITopicMapSystem {
         }
 
         /* (non-Javadoc)
-         * @see com.semagia.mappish.query.IResult#next()
+         * @see com.semagia.ooloo.query.IResult#next()
          */
         @Override
         public boolean next() {
@@ -150,7 +150,7 @@ public final class OntopiaTopicMapSystem extends AbstractTMAPITopicMapSystem {
         }
 
         /* (non-Javadoc)
-         * @see com.semagia.mappish.query.IResult#close()
+         * @see com.semagia.ooloo.query.IResult#close()
          */
         @Override
         public void close() {

@@ -58,7 +58,7 @@ public final class QueryFrame extends JInternalFrame implements IQueryView {
     }
 
     /* (non-Javadoc)
-     * @see com.semagia.mappish.ui.IQueryView#getQuery()
+     * @see com.semagia.ooloo.ui.IQueryView#getQuery()
      */
     @Override
     public Query getQuery() {
@@ -66,7 +66,7 @@ public final class QueryFrame extends JInternalFrame implements IQueryView {
     }
 
     /* (non-Javadoc)
-     * @see com.semagia.mappish.ui.IQueryView#setQuery(com.semagia.mappish.model.IQuery)
+     * @see com.semagia.ooloo.ui.IQueryView#setQuery(com.semagia.ooloo.query.Query)
      */
     @Override
     public void setQuery(final Query query) {
@@ -74,7 +74,7 @@ public final class QueryFrame extends JInternalFrame implements IQueryView {
     }
 
     /* (non-Javadoc)
-     * @see com.semagia.mappish.ui.IQueryView#getTopicMapSource()
+     * @see com.semagia.ooloo.ui.IQueryView#getTopicMapSource()
      */
     @Override
     public ITopicMapSource getTopicMapSource() {
@@ -82,7 +82,7 @@ public final class QueryFrame extends JInternalFrame implements IQueryView {
     }
 
     /* (non-Javadoc)
-     * @see com.semagia.mappish.ui.IQueryView#setBusy(boolean)
+     * @see com.semagia.ooloo.ui.IQueryView#setBusy(boolean)
      */
     @Override
     public void setBusy(boolean busy) {
@@ -90,7 +90,7 @@ public final class QueryFrame extends JInternalFrame implements IQueryView {
     }
 
     /* (non-Javadoc)
-     * @see com.semagia.mappish.ui.IQueryView#setResult(com.semagia.mappish.model.IResult)
+     * @see com.semagia.ooloo.ui.IQueryView#setResult(com.semagia.ooloo.query.IResult)
      */
     @Override
     public void setResult(IResult result) {

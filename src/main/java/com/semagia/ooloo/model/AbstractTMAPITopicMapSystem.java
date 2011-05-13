@@ -37,6 +37,10 @@ import com.semagia.ooloo.query.QueryException;
  * Abstract {@link ITopicMapSystem} implementation that uses a {@link TopicMapSystem}
  * implementation.
  * 
+ * Derived classes are required to implement the {@link #createMapHandler(TopicMap)},
+ * {@link #createTopicMapSystem()}, and {@link #executeQuery(TopicMap, Query)} methods;
+ * all other methods of the {@link ITopicMapSystem} are implemented by this class.
+ * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
 public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
@@ -67,17 +71,17 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
 
 
     /**
-     * 
+     * Issues a query against the provided topic map.
      *
-     * @param topicMap
-     * @param query
-     * @return
-     * @throws QueryException
+     * @param topicMap The topic map to issue the query against.
+     * @param query The query.
+     * @return The query result.
+     * @throws QueryException In case of an error.
      */
     protected abstract IResult executeQuery(final TopicMap topicMap, final Query query) throws QueryException;
 
     /* (non-Javadoc)
-     * @see com.semagia.mappish.model.ITopicMapSystem#getTopicMapSources()
+     * @see com.semagia.ooloo.model.ITopicMapSystem#getTopicMapSources()
      */
     @Override
     public final ITopicMapSource[] getTopicMapSources() {
@@ -85,7 +89,7 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
     }
 
     /* (non-Javadoc)
-     * @see com.semagia.mappish.model.ITopicMapSystem#loadSource(java.net.URI)
+     * @see com.semagia.ooloo.model.ITopicMapSystem#loadSource(java.net.URI)
      */
     @Override
     public final ITopicMapSource loadSource(final URI uri) throws IOException {
@@ -116,7 +120,7 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
     }
 
     /* (non-Javadoc)
-     * @see com.semagia.mappish.model.ITopicMapSystem#executeQuery(com.semagia.mappish.model.ITopicMapSystem.ITopicMapSource, com.semagia.mappish.query.Query)
+     * @see com.semagia.ooloo.model.ITopicMapSystem#executeQuery(com.semagia.ooloo.model.ITopicMapSystem.ITopicMapSource, com.semagia.ooloo.query.Query)
      */
     @Override
     public final IResult executeQuery(final ITopicMapSource src, final Query query) throws QueryException {
@@ -125,7 +129,7 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
     }
 
     /* (non-Javadoc)
-     * @see com.semagia.mappish.model.ITopicMapSystem#close()
+     * @see com.semagia.ooloo.model.ITopicMapSystem#closeSource(com.semagia.ooloo.model.ITopicMapSystem.ITopicMapSource)
      */
     @Override
     public final void closeSource(final ITopicMapSource src) {
@@ -141,7 +145,7 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
     }
 
     /* (non-Javadoc)
-     * @see com.semagia.mappish.model.ITopicMapSystem#close()
+     * @see com.semagia.ooloo.model.ITopicMapSystem#close()
      */
     @Override
     public final void close() {
@@ -164,11 +168,17 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
             _name = name;
         }
 
+        /* (non-Javadoc)
+         * @see com.semagia.ooloo.model.ITopicMapSystem.ITopicMapSource#getURI()
+         */
         @Override
         public URI getURI() {
             return _iri;
         }
 
+        /* (non-Javadoc)
+         * @see com.semagia.ooloo.model.ITopicMapSystem.ITopicMapSource#getName()
+         */
         @Override
         public String getName() {
             return _name;
