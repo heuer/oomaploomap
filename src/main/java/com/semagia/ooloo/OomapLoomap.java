@@ -94,6 +94,15 @@ public final class OomapLoomap extends SingleFrameApplication {
         show(_createMainPanel());
     }
 
+    /* (non-Javadoc)
+     * @see org.jdesktop.application.SingleFrameApplication#shutdown()
+     */
+    @Override
+    protected void shutdown() {
+        super.shutdown();
+        _tmSys.close();
+    }
+
     /**
      * Creates the toolbar.
      *
