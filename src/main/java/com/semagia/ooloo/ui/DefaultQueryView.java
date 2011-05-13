@@ -156,9 +156,17 @@ final class DefaultQueryView extends View implements IQueryView {
     @Override
     public void setQuery(final Query query) {
         _query = query;
-        _queryEditor.setSyntaxEditingStyle(query.getQueryLanguage().name());
+        setQueryLanguage(query.getQueryLanguage());
         _queryEditor.setText(query.getQueryString());
         _queryEditor.setCaretPosition(0);
+    }
+
+    /* (non-Javadoc)
+     * @see com.semagia.ooloo.ui.IQueryView#setQueryLanguage(com.semagia.ooloo.query.QueryLanguage)
+     */
+    @Override
+    public void setQueryLanguage(QueryLanguage lang) {
+        _queryEditor.setSyntaxEditingStyle(lang.name());
     }
 
     /* (non-Javadoc)

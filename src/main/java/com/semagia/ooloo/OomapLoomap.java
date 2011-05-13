@@ -113,6 +113,7 @@ public final class OomapLoomap extends SingleFrameApplication {
         getContext().getActionMap().get("runQuery").setEnabled(active);
         getContext().getActionMap().get("loadQuery").setEnabled(active);
         getContext().getActionMap().get("saveQuery").setEnabled(active);
+        getContext().getActionMap().get("saveAsQuery").setEnabled(active);
     }
 
     /**
@@ -124,7 +125,7 @@ public final class OomapLoomap extends SingleFrameApplication {
         final JMenuBar menuBar = new JMenuBar();
         menuBar.add(Menu.fromActions(this, "File", new String[]{"open", "---", "quit"}));
         menuBar.add(Menu.fromActions(this, "Edit", new String[]{"cut", "copy", "paste"}));
-        menuBar.add(Menu.fromActions(this, "Query", new String[]{"loadQuery", "---", "saveQuery", "---", "runQuery"}));
+        menuBar.add(Menu.fromActions(this, "Query", new String[]{"loadQuery", "---", "saveQuery", "saveAsQuery", "---", "runQuery"}));
         return menuBar;
     }
 
@@ -225,7 +226,7 @@ public final class OomapLoomap extends SingleFrameApplication {
     private void _setQueryLanguage(final QueryLanguage lang) {
         final Query currentQuery = _selectedQuery();
         if (currentQuery.getQueryLanguage() != lang) {
-            _queryView().setQuery(Query.build(lang, currentQuery.getQueryString(), currentQuery.getURI()));
+            _queryView().setQueryLanguage(lang);
         }
     }
 

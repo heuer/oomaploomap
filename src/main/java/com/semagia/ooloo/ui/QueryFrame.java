@@ -24,6 +24,7 @@ import org.jdesktop.application.Application;
 import com.semagia.ooloo.model.ITopicMapSystem.ITopicMapSource;
 import com.semagia.ooloo.query.IResult;
 import com.semagia.ooloo.query.Query;
+import com.semagia.ooloo.query.QueryLanguage;
 
 /**
  * 
@@ -71,6 +72,14 @@ public final class QueryFrame extends JInternalFrame implements IQueryView {
     @Override
     public void setQuery(final Query query) {
         _queryView.setQuery(query);
+    }
+
+    /* (non-Javadoc)
+     * @see com.semagia.ooloo.ui.IQueryView#setQueryLanguage(com.semagia.ooloo.query.QueryLanguage)
+     */
+    @Override
+    public void setQueryLanguage(final QueryLanguage lang) {
+        _queryView.setQueryLanguage(lang);
     }
 
     /* (non-Javadoc)
