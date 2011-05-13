@@ -40,10 +40,10 @@ public final class ImportUtils {
         // noop.
     }
 
-    public static void importTopicMap(final File file, final IMapHandler handler) throws ImportException, IOException {
+    public static void importTopicMap(final File file, final IMapHandler handler) throws IOException {
         final IDeserializer deser = _createDeserializer(file.getName());
         if (deser == null) {
-            throw new ImportException("Cannot import " + file.getName() + ". No deserializer found.");
+            throw new IOException("Cannot import " + file.getName() + ". No deserializer found.");
         }
         deser.setMapHandler(handler);
         // Enable more lenient topic map parsing
@@ -58,7 +58,7 @@ public final class ImportUtils {
                 throw ((IOException) ex.getCause());
             }
             else {
-                throw new ImportException(ex);
+                throw new IOException(ex);
             }
         }
         finally {

@@ -28,7 +28,6 @@ import org.tmapi.core.TopicMap;
 import org.tmapi.core.TopicMapExistsException;
 import org.tmapi.core.TopicMapSystem;
 
-import com.semagia.mappish.io.ImportException;
 import com.semagia.mappish.io.ImportUtils;
 import com.semagia.mappish.query.IResult;
 import com.semagia.mappish.query.Query;
@@ -84,7 +83,7 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
      * @see com.semagia.mappish.model.ITopicMapSystem#loadSource(java.net.URI)
      */
     @Override
-    public ITopicMapSource loadSource(final URI uri) throws ImportException, IOException {
+    public ITopicMapSource loadSource(final URI uri) throws IOException {
         final String iri = uri.toString();
         TopicMapSource src = _sources.get(iri);
         if (src == null) {

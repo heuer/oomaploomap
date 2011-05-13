@@ -18,7 +18,6 @@ package com.semagia.mappish.model;
 import java.io.IOException;
 import java.net.URI;
 
-import com.semagia.mappish.io.ImportException;
 import com.semagia.mappish.query.IResult;
 import com.semagia.mappish.query.Query;
 import com.semagia.mappish.query.QueryException;
@@ -38,7 +37,7 @@ public interface ITopicMapSystem {
      */
     public ITopicMapSource[] getTopicMapSources();
 
-    public ITopicMapSource loadSource(final URI uri) throws ImportException, IOException;
+    public ITopicMapSource loadSource(final URI uri) throws IOException;
 
     public IResult executeQuery(final ITopicMapSource src, final Query query) throws QueryException;
 
