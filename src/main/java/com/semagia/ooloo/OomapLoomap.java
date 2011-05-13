@@ -112,6 +112,7 @@ public final class OomapLoomap extends SingleFrameApplication {
     private void _setActiveFrame(boolean active) {
         getContext().getActionMap().get("runQuery").setEnabled(active);
         getContext().getActionMap().get("loadQuery").setEnabled(active);
+        getContext().getActionMap().get("saveQuery").setEnabled(active);
     }
 
     /**
@@ -123,7 +124,7 @@ public final class OomapLoomap extends SingleFrameApplication {
         final JMenuBar menuBar = new JMenuBar();
         menuBar.add(Menu.fromActions(this, "File", new String[]{"open", "---", "quit"}));
         menuBar.add(Menu.fromActions(this, "Edit", new String[]{"cut", "copy", "paste"}));
-        menuBar.add(Menu.fromActions(this, "Query", new String[]{"loadQuery", "---", "runQuery"}));
+        menuBar.add(Menu.fromActions(this, "Query", new String[]{"loadQuery", "---", "saveQuery", "---", "runQuery"}));
         return menuBar;
     }
 
