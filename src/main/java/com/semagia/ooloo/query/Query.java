@@ -17,7 +17,6 @@ package com.semagia.ooloo.query;
 
 import java.net.URI;
 
-
 /**
  * 
  * 

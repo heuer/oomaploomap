@@ -16,18 +16,39 @@
 package com.semagia.ooloo.query;
 
 /**
- * 
+ * Represents a query result.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
 public interface IResult {
 
-    public void close();
-
+    /**
+     * Returns the column names.
+     * 
+     * @return The column names.
+     */
     public String[] getColumnNames();
 
+    /**
+     * Returns the values of the current row as string values.
+     * 
+     * @return The values of the current row.
+     */
     public String[] getValues();
 
+    /**
+     * Moves to the next row.
+     * 
+     * After creation the cursor is an invalid state. After calling {@code next} the
+     * cursor moves to the first row.
+     * 
+     * @return {@code true} if a "next" row exists, otherwise {@code false}.
+     */
     public boolean next();
+
+    /**
+     * Closes the query result.
+     */
+    public void close();
 
 }
