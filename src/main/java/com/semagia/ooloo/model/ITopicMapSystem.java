@@ -37,19 +37,59 @@ public interface ITopicMapSystem {
      */
     public ITopicMapSource[] getTopicMapSources();
 
+    /**
+     * Loads the provided IRI into the system.
+     * 
+     * @param uri The IRI to load the topic map from.
+     * @return A {@link ITopicMapSource} representing the loaded topic map.
+     * @throws IOException In case of an error.
+     */
     public ITopicMapSource loadSource(final URI uri) throws IOException;
 
+    /**
+     * Issues a query against the provided {@link ITopicMapSource}.
+     * 
+     * @param src The topic map source.
+     * @param query The query.
+     * @return A query result.
+     * @throws QueryException In case of an error.
+     */
     public IResult executeQuery(final ITopicMapSource src, final Query query) throws QueryException;
 
+    /**
+     * Closes the provided {@link ITopicMapSource}.
+     * 
+     * Closing a topic map source does not imply that the topic map is removed from
+     * the system. The system may keep track about the usage of the topic map source
+     * and keep it alive unless all references to the source are closed.
+     * 
+     * @param src The topic map source to close.
+     */
     public void closeSource(final ITopicMapSource src);
 
+    /**
+     * Closes the instance.
+     */
     public void close();
 
 
+    /**
+     * Represents a topic map.
+     */
     public interface ITopicMapSource {
 
+        /**
+         * Returns the IRI of the topic map.
+         * 
+         * @return The IRI.
+         */
         public URI getURI();
 
+        /**
+         * Returns the optional name of the topic map.
+         * 
+         * @return A string or {@code null} if the topic map has no name.
+         */
         public String getName();
 
     }

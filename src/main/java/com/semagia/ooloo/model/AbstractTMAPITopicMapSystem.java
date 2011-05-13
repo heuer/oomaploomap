@@ -34,7 +34,8 @@ import com.semagia.ooloo.query.Query;
 import com.semagia.ooloo.query.QueryException;
 
 /**
- * 
+ * Abstract {@link ITopicMapSystem} implementation that uses a {@link TopicMapSystem}
+ * implementation.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
@@ -50,15 +51,17 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
     }
 
     /**
-     * @return
+     * Returns the underlying {@link TopicMapSystem}.
+     * 
+     * @return A {@link TopicMapSystem} instance.
      */
     protected abstract TopicMapSystem createTopicMapSystem();
 
     /**
-     * 
+     * Returns a {@link IMapHandler} which operated upon the provided topic map.
      *
-     * @param topicMap
-     * @return
+     * @param topicMap The topic map which should receive the MIO events.
+     * @return A  {@link IMapHandler} instance.
      */
     protected abstract IMapHandler createMapHandler(final TopicMap topicMap);
 
@@ -147,6 +150,9 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
     }
 
 
+    /**
+     * Internal {@link ITopicMapSource} implementation.
+     */
     private static final class TopicMapSource implements ITopicMapSource {
 
         private final URI _iri;

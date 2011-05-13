@@ -29,7 +29,7 @@ import com.semagia.mio.Source;
 import com.semagia.mio.Syntax;
 
 /**
- * 
+ * Utility functions to import topic maps regardless of the underlying Topic Maps engine.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
@@ -39,6 +39,13 @@ public final class ImportUtils {
         // noop.
     }
 
+    /**
+     * Import the provided IRI. Events are sent to the provided {@link IMapHandler}.
+     * 
+     * @param uri The IRI to import the topic map from.
+     * @param handler The handler which should receive the MIO events.
+     * @throws IOException In case of an error.
+     */
     public static void importTopicMap(final URI uri, final IMapHandler handler) throws IOException {
         final String base = uri.toString();
         final IDeserializer deser = _createDeserializer(base);
@@ -66,16 +73,21 @@ public final class ImportUtils {
         }
     }
 
-    private static IDeserializer _createDeserializer(final String fileName) {
-        final int dotIdx = fileName.lastIndexOf('.');
+    /**
+     * Returns a {@link IDeserializer} instance to import the provided IRI.
+     * 
+     * This method relies on the file name extension.
+     * 
+     * @param iri The IRI.
+     * @return A deserializer instance or {@code null} if no deserializer can be found.
+     */
+    private static IDeserializer _createDeserializer(final String iri) {
+        final int dotIdx = iri.lastIndexOf('.');
         if (dotIdx == -1) {
             return null;
         }
-        final Syntax syntax = Syntax.forFileExtension(fileName.substring(dotIdx+1));
-        if (syntax == null) {
-            return null;
-        }
-        return DeserializerRegistry.getInstance().createDeserializer(syntax);
+        final Syntax syntax = Syntax.forFileExtension(iri.substring(dotIdx+1));
+        return syntax == null ? null : DeserializerRegistry.getInstance().createDeserializer(syntax);
     }
 
 }
