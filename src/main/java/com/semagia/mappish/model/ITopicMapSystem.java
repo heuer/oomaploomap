@@ -45,4 +45,14 @@ public interface ITopicMapSystem {
     public void closeSource(final ITopicMapSource src);
 
     public void close();
+
+
+    public interface ITopicMapSource {
+
+        public URI getURI();
+
+        public String getName();
+
+    }
+
 }

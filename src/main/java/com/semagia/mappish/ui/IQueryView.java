@@ -15,7 +15,7 @@
  */
 package com.semagia.mappish.ui;
 
-import com.semagia.mappish.model.ITopicMapSource;
+import com.semagia.mappish.model.ITopicMapSystem.ITopicMapSource;
 import com.semagia.mappish.query.IResult;
 import com.semagia.mappish.query.Query;
 

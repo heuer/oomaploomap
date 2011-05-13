@@ -21,7 +21,7 @@ import javax.swing.JInternalFrame;
 
 import org.jdesktop.application.Application;
 
-import com.semagia.mappish.model.ITopicMapSource;
+import com.semagia.mappish.model.ITopicMapSystem.ITopicMapSource;
 import com.semagia.mappish.query.IResult;
 import com.semagia.mappish.query.Query;
 

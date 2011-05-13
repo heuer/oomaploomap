@@ -37,8 +37,8 @@ import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.Task;
 
 import com.semagia.mappish.io.FileUtils;
-import com.semagia.mappish.model.ITopicMapSource;
 import com.semagia.mappish.model.ITopicMapSystem;
+import com.semagia.mappish.model.ITopicMapSystem.ITopicMapSource;
 import com.semagia.mappish.model.OntopiaTopicMapSystem;
 import com.semagia.mappish.query.IResult;
 import com.semagia.mappish.query.Query;
