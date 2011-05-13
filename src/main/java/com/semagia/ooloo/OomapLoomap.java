@@ -23,6 +23,8 @@ import java.io.IOException;
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.JToolBar;
 import javax.swing.event.InternalFrameAdapter;
@@ -45,6 +47,7 @@ import com.semagia.ooloo.query.IResult;
 import com.semagia.ooloo.query.Query;
 import com.semagia.ooloo.query.QueryLanguage;
 import com.semagia.ooloo.ui.IQueryView;
+import com.semagia.ooloo.ui.Menu;
 import com.semagia.ooloo.ui.QueryFrame;
 import com.semagia.ooloo.ui.ToolBar;
 
@@ -90,9 +93,11 @@ public final class OomapLoomap extends SingleFrameApplication {
      */
     @Override
     protected void startup() {
+        getMainFrame().setJMenuBar(_createMenuBar());
         getMainFrame().add(_createToolBar(), BorderLayout.NORTH);
         getMainFrame().setPreferredSize(new Dimension(500, 400));
         show(_createMainPanel());
+        _setActiveFrame(false);
     }
 
     /* (non-Javadoc)
@@ -102,6 +107,24 @@ public final class OomapLoomap extends SingleFrameApplication {
     protected void shutdown() {
         super.shutdown();
         _tmSys.close();
+    }
+
+    private void _setActiveFrame(boolean active) {
+        getContext().getActionMap().get("runQuery").setEnabled(active);
+        getContext().getActionMap().get("loadQuery").setEnabled(active);
+    }
+
+    /**
+     * Creates the menubar.
+     *
+     * @return The menubar.
+     */
+    private JMenuBar _createMenuBar() {
+        final JMenuBar menuBar = new JMenuBar();
+        menuBar.add(Menu.fromActions(this, "File", new String[]{"open", "---", "quit"}));
+        menuBar.add(Menu.fromActions(this, "Edit", new String[]{"cut", "copy", "paste"}));
+        menuBar.add(Menu.fromActions(this, "Query", new String[]{"loadQuery", "---", "runQuery"}));
+        return menuBar;
     }
 
     /**
@@ -257,7 +280,11 @@ public final class OomapLoomap extends SingleFrameApplication {
     }
 
     private void _showErrorDialog(final Throwable ex) {
-        ex.printStackTrace();
+        _showErrorDialog(ex, ex.getMessage());
+    }
+
+    private void _showErrorDialog(final Throwable ex, final String msg) {
+        JOptionPane.showMessageDialog(getMainFrame(), msg, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
 
@@ -268,8 +295,19 @@ public final class OomapLoomap extends SingleFrameApplication {
          */
         @Override
         public void internalFrameClosed(InternalFrameEvent evt) {
+            _setActiveFrame(false);
             _tmSys.closeSource(((IQueryView) evt.getInternalFrame()).getTopicMapSource());
         }
+
+        /* (non-Javadoc)
+         * @see javax.swing.event.InternalFrameAdapter#internalFrameActivated(javax.swing.event.InternalFrameEvent)
+         */
+        @Override
+        public void internalFrameActivated(InternalFrameEvent evt) {
+            _setActiveFrame(true);
+        }
+
+
     }
 
     private final class RunQueryTask extends Task<IResult, Void> {
@@ -294,7 +332,7 @@ public final class OomapLoomap extends SingleFrameApplication {
         @Override
         protected void failed(Throwable cause) {
             _queryView.setBusy(false);
-            _showErrorDialog(cause);
+            _showErrorDialog(cause, "Query failed");
         }
 
         @Override
@@ -331,7 +369,7 @@ public final class OomapLoomap extends SingleFrameApplication {
         @Override
         protected void failed(Throwable cause) {
             _setWorking(false);
-            _showErrorDialog(cause);
+            _showErrorDialog(cause, "Import failed");
         }
 
         @Override

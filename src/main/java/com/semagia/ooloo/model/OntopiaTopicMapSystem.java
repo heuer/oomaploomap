@@ -15,6 +15,8 @@
  */
 package com.semagia.ooloo.model;
 
+import java.util.Collection;
+
 import org.tmapi.core.TMAPIException;
 import org.tmapi.core.TopicMap;
 import org.tmapi.core.TopicMapSystem;
@@ -36,6 +38,7 @@ import com.semagia.mio.IMapHandler;
 import com.semagia.ooloo.query.IResult;
 import com.semagia.ooloo.query.Query;
 import com.semagia.ooloo.query.QueryException;
+import com.semagia.ooloo.query.QueryLanguage;
 
 /**
  * {@link ITopicMapSystem} implementation that uses Ontopia.
@@ -95,6 +98,21 @@ public final class OntopiaTopicMapSystem extends AbstractTMAPITopicMapSystem {
         catch (InvalidQueryException ex) {
             throw new QueryException(ex);
         }
+    }
+
+    /* (non-Javadoc)
+     * @see com.semagia.ooloo.model.ITopicMapSystem#getSupportedQueryLanguages()
+     */
+    @Override
+    public QueryLanguage[] getQueryLanguages() {
+        final Collection<String> langNames = QueryUtils.getAvailableQueryLanguages();
+        final QueryLanguage[] langs = new QueryLanguage[langNames.size()];
+        int i = 0;
+        for (String langName: langNames) {
+            langs[i] = QueryLanguage.valueOf(langName);
+            i++;
+        }
+        return langs;
     }
 
 

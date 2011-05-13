@@ -21,6 +21,7 @@ import java.net.URI;
 import com.semagia.ooloo.query.IResult;
 import com.semagia.ooloo.query.Query;
 import com.semagia.ooloo.query.QueryException;
+import com.semagia.ooloo.query.QueryLanguage;
 
 /**
  * The topic map system keeps track about the loaded topic maps and can issue
@@ -29,6 +30,13 @@ import com.semagia.ooloo.query.QueryException;
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
 public interface ITopicMapSystem {
+
+    /**
+     * Returns the supported query languages.
+     *
+     * @return An array of query languages. The array must have at least one entry.
+     */
+    public QueryLanguage[] getQueryLanguages();
 
     /**
      * Returns an array of loaded topic maps.
