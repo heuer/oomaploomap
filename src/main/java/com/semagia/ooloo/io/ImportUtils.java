@@ -40,10 +40,10 @@ public final class ImportUtils {
     }
 
     public static void importTopicMap(final URI uri, final IMapHandler handler) throws IOException {
-        final String iri = uri.toString();
-        final IDeserializer deser = _createDeserializer(iri);
+        final String base = uri.toString();
+        final IDeserializer deser = _createDeserializer(base);
         if (deser == null) {
-            throw new IOException("Cannot import " + iri + ". No deserializer found.");
+            throw new IOException("Cannot import " + base + ". No deserializer found.");
         }
         deser.setMapHandler(handler);
         // Enable more lenient topic map parsing
@@ -51,7 +51,7 @@ public final class ImportUtils {
         deser.setProperty(Property.LTM_LEGACY, Boolean.FALSE);
         final InputStream stream = new BufferedInputStream(uri.toURL().openStream());
         try {
-            deser.parse(new Source(stream, iri));
+            deser.parse(new Source(stream, base));
         }
         catch (MIOException ex) {
             if (ex.getCause() instanceof IOException) {
