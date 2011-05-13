@@ -46,18 +46,21 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
 
     protected AbstractTMAPITopicMapSystem() {
         _sources = new HashMap<String, TopicMapSource>();
-        _tmSys = getTopicMapSystem();
+        _tmSys = createTopicMapSystem();
     }
 
-    protected abstract TopicMapSystem getTopicMapSystem();
+    /**
+     * @return
+     */
+    protected abstract TopicMapSystem createTopicMapSystem();
 
     /**
      * 
      *
-     * @param tm
+     * @param topicMap
      * @return
      */
-    protected abstract IMapHandler createMapHandler(final TopicMap tm);
+    protected abstract IMapHandler createMapHandler(final TopicMap topicMap);
 
 
     /**
@@ -74,7 +77,7 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
      * @see com.semagia.mappish.model.ITopicMapSystem#getTopicMapSources()
      */
     @Override
-    public ITopicMapSource[] getTopicMapSources() {
+    public final ITopicMapSource[] getTopicMapSources() {
         return _sources.values().toArray(new ITopicMapSource[_sources.size()]);
     }
 
@@ -82,7 +85,7 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
      * @see com.semagia.mappish.model.ITopicMapSystem#loadSource(java.net.URI)
      */
     @Override
-    public ITopicMapSource loadSource(final URI uri) throws IOException {
+    public final ITopicMapSource loadSource(final URI uri) throws IOException {
         final String iri = uri.toString();
         TopicMapSource src = _sources.get(iri);
         if (src == null) {
@@ -113,7 +116,7 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
      * @see com.semagia.mappish.model.ITopicMapSystem#executeQuery(com.semagia.mappish.model.ITopicMapSystem.ITopicMapSource, com.semagia.mappish.query.Query)
      */
     @Override
-    public IResult executeQuery(final ITopicMapSource src, final Query query) throws QueryException {
+    public final IResult executeQuery(final ITopicMapSource src, final Query query) throws QueryException {
         final String iri = src.getURI().toString();
         return executeQuery(_tmSys.getTopicMap(iri), query);
     }
@@ -122,7 +125,7 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
      * @see com.semagia.mappish.model.ITopicMapSystem#close()
      */
     @Override
-    public void closeSource(final ITopicMapSource src) {
+    public final void closeSource(final ITopicMapSource src) {
         final TopicMapSource source = _sources.get(src.getURI());
         if (source != null) {
             final String iri = src.getURI().toString();
@@ -138,7 +141,7 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
      * @see com.semagia.mappish.model.ITopicMapSystem#close()
      */
     @Override
-    public void close() {
+    public final void close() {
         _tmSys.close();
         _sources.clear();
     }

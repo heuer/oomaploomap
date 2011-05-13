@@ -48,11 +48,21 @@ public final class OntopiaTopicMapSystem extends AbstractTMAPITopicMapSystem {
         super();
     }
 
+    /**
+     * Returns the underlying TopicMapIF from the provided TMAPI topic map.
+     * 
+     * @param tm The topic map to unwrap.
+     * @return The underlying TopicMapIF implementation.
+     */
+    private static TopicMapIF _unwrap(final TopicMap tm) {
+        return ((TopicMapImpl) tm).getWrapped();
+    }
+
     /* (non-Javadoc)
      * @see com.semagia.mappish.model.AbstractTMAPITopicMapSystem#getTopicMapSystem()
      */
     @Override
-    protected TopicMapSystem getTopicMapSystem() {
+    protected TopicMapSystem createTopicMapSystem() {
         try {
             return new net.ontopia.topicmaps.impl.tmapi2.TopicMapSystemFactory().newTopicMapSystem();
         }
@@ -65,8 +75,8 @@ public final class OntopiaTopicMapSystem extends AbstractTMAPITopicMapSystem {
      * @see com.semagia.mappish.model.AbstractTMAPITopicMapSystem#createMapHandler(org.tmapi.core.TopicMap)
      */
     @Override
-    protected IMapHandler createMapHandler(TopicMap tm) {
-        return new OntopiaMapHandler(((TopicMapImpl) tm).getWrapped());
+    protected IMapHandler createMapHandler(final TopicMap tm) {
+        return new OntopiaMapHandler(_unwrap(tm));
     }
 
     /* (non-Javadoc)
@@ -74,12 +84,11 @@ public final class OntopiaTopicMapSystem extends AbstractTMAPITopicMapSystem {
      */
     @Override
     public IResult executeQuery(final TopicMap topicMap, final Query query) throws QueryException {
-        final TopicMapIF tm = ((TopicMapImpl) topicMap).getWrapped();
         final QueryProcessorFactoryIF procFactory = QueryUtils.getQueryProcessorFactory(query.getQueryLanguage().name());
         if (procFactory == null) {
             throw new QueryException("Unknown query language " + query.getQueryLanguage());
         }
-        final QueryProcessorIF proc = procFactory.createQueryProcessor(tm, null, null);
+        final QueryProcessorIF proc = procFactory.createQueryProcessor(_unwrap(topicMap), null, null);
         try {
             return new OntopiaResult(proc.execute(query.getQueryString()));
         } 
