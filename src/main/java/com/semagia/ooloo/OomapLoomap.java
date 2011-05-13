@@ -25,6 +25,7 @@ import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
 import javax.swing.JProgressBar;
 import javax.swing.JToolBar;
+import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 import javax.swing.filechooser.FileFilter;
@@ -260,37 +261,15 @@ public final class OomapLoomap extends SingleFrameApplication {
     }
 
 
-    private final class FrameListener implements InternalFrameListener {
+    private final class FrameListener extends InternalFrameAdapter {
 
-        @Override
-        public void internalFrameActivated(InternalFrameEvent evt) {
-        }
-
+        /* (non-Javadoc)
+         * @see javax.swing.event.InternalFrameAdapter#internalFrameClosed(javax.swing.event.InternalFrameEvent)
+         */
         @Override
         public void internalFrameClosed(InternalFrameEvent evt) {
             _tmSys.closeSource(((IQueryView) evt.getInternalFrame()).getTopicMapSource());
         }
-
-        @Override
-        public void internalFrameClosing(InternalFrameEvent evt) {
-        }
-
-        @Override
-        public void internalFrameDeactivated(InternalFrameEvent evt) {
-        }
-
-        @Override
-        public void internalFrameDeiconified(InternalFrameEvent evt) {
-        }
-
-        @Override
-        public void internalFrameIconified(InternalFrameEvent evt) {
-        }
-
-        @Override
-        public void internalFrameOpened(InternalFrameEvent evt) {
-        }
-        
     }
 
     private final class RunQueryTask extends Task<IResult, Void> {
