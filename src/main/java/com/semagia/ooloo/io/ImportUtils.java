@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.semagia.mappish.io;
+package com.semagia.ooloo.io;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -40,12 +40,11 @@ public final class ImportUtils {
         // noop.
     }
 
-    public static void importTopicMap(final File file, final IMapHandler handler) throws ImportException, IOException {
+    public static void importTopicMap(final File file, final IMapHandler handler) throws IOException {
         final IDeserializer deser = _createDeserializer(file.getName());
         if (deser == null) {
-            throw new ImportException("Cannot import " + file.getName() + ". No deserializer found.");
+            throw new IOException("Cannot import " + file.getName() + ". No deserializer found.");
         }
-        
         deser.setMapHandler(handler);
         // Enable more lenient topic map parsing
         deser.setProperty(Property.VALIDATE, Boolean.FALSE);
@@ -59,7 +58,7 @@ public final class ImportUtils {
                 throw ((IOException) ex.getCause());
             }
             else {
-                throw new ImportException(ex);
+                throw new IOException(ex);
             }
         }
         finally {
@@ -78,4 +77,5 @@ public final class ImportUtils {
         }
         return DeserializerRegistry.getInstance().createDeserializer(syntax);
     }
+
 }

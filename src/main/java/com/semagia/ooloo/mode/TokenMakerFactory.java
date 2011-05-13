@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.semagia.mappish.mode;
+package com.semagia.ooloo.mode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,14 +21,15 @@ import java.util.Map;
 import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
-import com.semagia.mappish.query.QueryLanguage;
+import com.semagia.ooloo.query.QueryLanguage;
 
 /**
- * 
+ * TokenMakerFactory implementation that supports only the plain style tokenizer
+ * and all Topic Maps query language tokenizers.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
-public class TokenMakerFactory extends AbstractTokenMakerFactory {
+public final class TokenMakerFactory extends AbstractTokenMakerFactory {
 
     /* (non-Javadoc)
      * @see org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory#createTokenMakerKeyToClassNameMap()
@@ -37,9 +38,9 @@ public class TokenMakerFactory extends AbstractTokenMakerFactory {
     protected Map<String, String> createTokenMakerKeyToClassNameMap() {
         final Map<String, String> map = new HashMap<String, String>();
         map.put(SyntaxConstants.SYNTAX_STYLE_NONE, "org.fife.ui.rsyntaxtextarea.modes.PlainTextTokenMaker");
-        map.put(QueryLanguage.TMQL.name(), "com.semagia.mappish.mode.TMQLTokenMaker");
-        map.put(QueryLanguage.TOLOG.name(), "com.semagia.mappish.mode.TologTokenMaker");
-        map.put(QueryLanguage.TOMA.name(), "com.semagia.mappish.mode.TomaTokenMaker");
+        map.put(QueryLanguage.TMQL.name(), "com.semagia.ooloo.mode.TMQLTokenMaker");
+        map.put(QueryLanguage.TOLOG.name(), "com.semagia.ooloo.mode.TologTokenMaker");
+        map.put(QueryLanguage.TOMA.name(), "com.semagia.ooloo.mode.TomaTokenMaker");
         return map;
     }
 

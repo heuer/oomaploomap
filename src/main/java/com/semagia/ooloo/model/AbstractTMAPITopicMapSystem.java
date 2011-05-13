@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.semagia.mappish.model;
+package com.semagia.ooloo.model;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,75 +22,79 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import net.ontopia.topicmaps.core.TopicMapIF;
-import net.ontopia.topicmaps.impl.tmapi2.TopicMapImpl;
-import net.ontopia.topicmaps.io.OntopiaMapHandler;
-import net.ontopia.topicmaps.query.core.InvalidQueryException;
-import net.ontopia.topicmaps.query.core.QueryProcessorFactoryIF;
-import net.ontopia.topicmaps.query.core.QueryProcessorIF;
-import net.ontopia.topicmaps.query.utils.QueryUtils;
-
 import org.tmapi.core.Name;
-import org.tmapi.core.TMAPIException;
 import org.tmapi.core.Topic;
 import org.tmapi.core.TopicMap;
+import org.tmapi.core.TopicMapExistsException;
+import org.tmapi.core.TopicMapSystem;
 
-import com.semagia.mappish.io.ImportException;
-import com.semagia.mappish.io.ImportUtils;
-import com.semagia.mappish.query.IResult;
-import com.semagia.mappish.query.OntopiaResult;
-import com.semagia.mappish.query.Query;
-import com.semagia.mappish.query.QueryException;
+import com.semagia.mio.IMapHandler;
+import com.semagia.ooloo.io.ImportUtils;
+import com.semagia.ooloo.query.IResult;
+import com.semagia.ooloo.query.Query;
+import com.semagia.ooloo.query.QueryException;
 
 /**
  * 
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
-public final class TopicMapSystem {
+public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
 
-    private final org.tmapi.core.TopicMapSystem _tmSys;
+
     private final Map<String, TopicMapSource> _sources;
+    private final TopicMapSystem _tmSys;
 
-    public TopicMapSystem() {
-        try {
-            _tmSys = new net.ontopia.topicmaps.impl.tmapi2.TopicMapSystemFactory().newTopicMapSystem();
-        } 
-        catch (TMAPIException ex) {
-            throw new RuntimeException("Unexpected error while creating TopicMapSystem", ex);
-        }
+    protected AbstractTMAPITopicMapSystem() {
         _sources = new HashMap<String, TopicMapSource>();
+        _tmSys = getTopicMapSystem();
     }
+
+    protected abstract TopicMapSystem getTopicMapSystem();
 
     /**
      * 
      *
+     * @param tm
      * @return
      */
+    protected abstract IMapHandler createMapHandler(final TopicMap tm);
+
+
+    /**
+     * 
+     *
+     * @param topicMap
+     * @param query
+     * @return
+     * @throws QueryException
+     */
+    protected abstract IResult executeQuery(final TopicMap topicMap, final Query query) throws QueryException;
+
+    /* (non-Javadoc)
+     * @see com.semagia.mappish.model.ITopicMapSystem#getTopicMapSources()
+     */
+    @Override
     public ITopicMapSource[] getTopicMapSources() {
         return _sources.values().toArray(new ITopicMapSource[_sources.size()]);
     }
 
-    /**
-     * 
-     *
-     * @param iri
-     * @return
-     * @throws IOException 
-     * @throws ImportException 
+    /* (non-Javadoc)
+     * @see com.semagia.mappish.model.ITopicMapSystem#loadSource(java.net.URI)
      */
-    public ITopicMapSource loadSource(final URI uri) throws ImportException, IOException {
+    @Override
+    public ITopicMapSource loadSource(final URI uri) throws IOException {
         final String iri = uri.toString();
         TopicMapSource src = _sources.get(iri);
         if (src == null) {
             TopicMap tm = null;
             try {
                 tm = _tmSys.createTopicMap(iri);
-            } 
-            catch (TMAPIException ex) {
-                // Unlikely
             }
-            ImportUtils.importTopicMap(new File(uri), new OntopiaMapHandler(((TopicMapImpl) tm).getWrapped()));
+            catch (TopicMapExistsException ex) {
+                // Shouldn't happen
+            }
+            ImportUtils.importTopicMap(new File(uri), createMapHandler(tm));
             String name = null;
             final Topic reifier = tm.getReifier();
             if (reifier != null) {
@@ -106,30 +110,19 @@ public final class TopicMapSystem {
         return src;
     }
 
+    /* (non-Javadoc)
+     * @see com.semagia.mappish.model.ITopicMapSystem#executeQuery(com.semagia.mappish.model.ITopicMapSystem.ITopicMapSource, com.semagia.mappish.query.Query)
+     */
+    @Override
     public IResult executeQuery(final ITopicMapSource src, final Query query) throws QueryException {
         final String iri = src.getURI().toString();
-        final TopicMapIF tm = ((TopicMapImpl) _tmSys.getTopicMap(iri)).getWrapped();
-        final QueryProcessorFactoryIF procFactory = QueryUtils.getQueryProcessorFactory(query.getQueryLanguage().name());
-        if (procFactory == null) {
-            throw new QueryException("Unknown query language " + query.getQueryLanguage());
-        }
-        return _runQuery(procFactory.createQueryProcessor(tm, null, null), query.getQueryString());
+        return executeQuery(_tmSys.getTopicMap(iri), query);
     }
 
-    private IResult _runQuery(final QueryProcessorIF proc, final String query) throws QueryException {
-        try {
-            return new OntopiaResult(proc.execute(query));
-        } 
-        catch (InvalidQueryException ex) {
-            throw new QueryException(ex);
-        }
-    }
-
-    /**
-     * 
-     *
-     * @param iri
+    /* (non-Javadoc)
+     * @see com.semagia.mappish.model.ITopicMapSystem#close()
      */
+    @Override
     public void closeSource(final ITopicMapSource src) {
         final TopicMapSource source = _sources.get(src.getURI());
         if (source != null) {
@@ -142,16 +135,16 @@ public final class TopicMapSystem {
         }
     }
 
-    /**
-     * 
-     *
+    /* (non-Javadoc)
+     * @see com.semagia.mappish.model.ITopicMapSystem#close()
      */
+    @Override
     public void close() {
         _tmSys.close();
         _sources.clear();
     }
 
-    
+
     private static final class TopicMapSource implements ITopicMapSource {
 
         private final URI _iri;
@@ -174,5 +167,4 @@ public final class TopicMapSystem {
         }
 
     }
-
 }

@@ -13,32 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.semagia.mappish.query;
+package com.semagia.ooloo.ui;
 
-import junit.framework.TestCase;
+import com.semagia.ooloo.model.ITopicMapSystem.ITopicMapSource;
+import com.semagia.ooloo.query.IResult;
+import com.semagia.ooloo.query.Query;
 
 /**
  * 
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
-public class TestQueryLanguage extends TestCase {
+public interface IQueryView {
 
-    public void testByExtension() {
-        assertEquals(QueryLanguage.TMQL, QueryLanguage.fromExtension("tq"));
-        assertEquals(QueryLanguage.TOLOG, QueryLanguage.fromExtension("tl"));
-        assertEquals(QueryLanguage.TMQL, QueryLanguage.fromExtension("tQ"));
-        assertEquals(QueryLanguage.TOLOG, QueryLanguage.fromExtension("tL"));
-    }
+    public Query getQuery();
 
-    public void testByExtensionTologIllegal() {
-        try {
-            QueryLanguage.fromExtension("tlo");
-            fail("Expected an IAE");
-        }
-        catch (IllegalArgumentException ex) {
-            
-        }
-    }
+    public void setQuery(Query query);
+
+    public ITopicMapSource getTopicMapSource();
+
+    public void setBusy(boolean busy);
+
+    public void setResult(IResult result);
 
 }

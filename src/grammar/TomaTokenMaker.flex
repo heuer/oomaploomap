@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.semagia.mappish.mode;
+package com.semagia.ooloo.mode;
 
 import java.io.IOException;
 

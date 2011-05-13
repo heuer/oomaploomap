@@ -13,27 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.semagia.mappish.ui;
-
-import com.semagia.mappish.model.ITopicMapSource;
-import com.semagia.mappish.query.IResult;
-import com.semagia.mappish.query.Query;
+package com.semagia.ooloo.query;
 
 /**
  * 
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
-public interface IQueryView {
+public class QueryException extends Exception {
 
-    public Query getQuery();
+    private static final long serialVersionUID = 1L;
 
-    public void setQuery(Query query);
+    public QueryException(final String msg) {
+        super(msg);
+    }
 
-    public ITopicMapSource getTopicMapSource();
-
-    public void setBusy(boolean busy);
-
-    public void setResult(IResult result);
+    public QueryException(final Throwable cause) {
+        super(cause);
+    }
 
 }

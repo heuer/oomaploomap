@@ -11,5 +11,5 @@ Supported languages:
 
 
 Similar projects:
-  * TMQL Console <https://github.com/mhoyer/tmql-console/tree/master/tmql-console>
+  * TMQL Console <https://github.com/mhoyer/tmql-console>
   * Tamana <https://code.google.com/a/eclipselabs.org/p/tamana/>

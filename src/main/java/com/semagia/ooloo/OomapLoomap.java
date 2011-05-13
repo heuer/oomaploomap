@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.semagia.mappish;
+package com.semagia.ooloo;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -36,42 +36,52 @@ import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.Task;
 
-import com.semagia.mappish.io.FileUtils;
-import com.semagia.mappish.model.ITopicMapSource;
-import com.semagia.mappish.model.TopicMapSystem;
-import com.semagia.mappish.query.IResult;
-import com.semagia.mappish.query.Query;
-import com.semagia.mappish.query.QueryLanguage;
-import com.semagia.mappish.ui.IQueryView;
-import com.semagia.mappish.ui.QueryFrame;
-import com.semagia.mappish.ui.ToolBar;
+import com.semagia.ooloo.io.FileUtils;
+import com.semagia.ooloo.model.ITopicMapSystem;
+import com.semagia.ooloo.model.OntopiaTopicMapSystem;
+import com.semagia.ooloo.model.ITopicMapSystem.ITopicMapSource;
+import com.semagia.ooloo.query.IResult;
+import com.semagia.ooloo.query.Query;
+import com.semagia.ooloo.query.QueryLanguage;
+import com.semagia.ooloo.ui.IQueryView;
+import com.semagia.ooloo.ui.QueryFrame;
+import com.semagia.ooloo.ui.ToolBar;
 
 /**
- * 
+ * Main application.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
-public final class Mappish extends SingleFrameApplication {
+public final class OomapLoomap extends SingleFrameApplication {
 
     private static final FileFilter _TM_FILE_FILTER = new FileNameExtensionFilter(
-            "Topic Maps (*.ctm, *.ltm, *.xtm)", "ctm", "ltm", "xtm");
+            "Topic Maps (*.ctm, *.jtm, *.ltm, *.xtm)", "ctm", "jtm", "ltm", "xtm");
 
     private static final FileFilter _QL_FILE_FILTER = new FileNameExtensionFilter(
             "Topic Maps Query (*.tq, *.tl, *.ta)", "tq", "tl", "ta");
 
     static {
-        System.setProperty(TokenMakerFactory.PROPERTY_DEFAULT_TOKEN_MAKER_FACTORY, com.semagia.mappish.mode.TokenMakerFactory.class.getName());
+        // Replace the default token maker 
+        System.setProperty(TokenMakerFactory.PROPERTY_DEFAULT_TOKEN_MAKER_FACTORY, 
+                com.semagia.ooloo.mode.TokenMakerFactory.class.getName());
     }
 
     private JDesktopPane _desktop;
     private String _lastDirectory;
 
-    private TopicMapSystem _tmSys;
+    private ITopicMapSystem _tmSys;
 
     private JProgressBar _progressBar;
 
-    private Mappish() {
-        _tmSys = new TopicMapSystem();
+    private InternalFrameListener _frameListener;
+
+    private OomapLoomap() {
+        _tmSys = new OntopiaTopicMapSystem();
+        _frameListener = new FrameListener();
+    }
+
+    public static void main(final String[] args) throws Exception {
+        Application.launch(OomapLoomap.class, args);
     }
 
     /* (non-Javadoc)
@@ -84,6 +94,20 @@ public final class Mappish extends SingleFrameApplication {
         show(_createMainPanel());
     }
 
+    /* (non-Javadoc)
+     * @see org.jdesktop.application.SingleFrameApplication#shutdown()
+     */
+    @Override
+    protected void shutdown() {
+        super.shutdown();
+        _tmSys.close();
+    }
+
+    /**
+     * Creates the toolbar.
+     *
+     * @return The toolbar.
+     */
     private JComponent _createToolBar() {
         _progressBar = new JProgressBar();
         _progressBar.setBorderPainted(false);
@@ -92,40 +116,59 @@ public final class Mappish extends SingleFrameApplication {
         return toolBar;
     }
 
+    /**
+     * Creates and returns the main panel.
+     * 
+     * This method must be invoked only once.
+     *
+     * @return The main panel.
+     */
     private JComponent _createMainPanel() {
         _desktop = new JDesktopPane();
         return _desktop;
     }
 
-    public static void main(final String[] args) throws Exception {
-        Application.launch(Mappish.class, args);
-    }
-
+    /**
+     * Creates a file chooser with the provided file filter.
+     * 
+     * The file chooser starts at the last opened directory or in the
+     * user's default directoy.
+     *
+     * @param filter The file filter.
+     * @return A file chooser instance.
+     */
     private final JFileChooser _fileChooser(final FileFilter filter) {
-        return _fileChooser(filter, null);
-    }
-
-    private final JFileChooser _fileChooser(final FileFilter filter, final String initialDir) {
-        final JFileChooser fc = new JFileChooser(initialDir != null ? initialDir : _lastDirectory);
+        final JFileChooser fc = new JFileChooser(_lastDirectory);
         fc.setFileFilter(filter);
         return fc;
     }
 
-    @Action
-    public ImportTopicMapTask open() {
-        final File file = _openFile(_TM_FILE_FILTER);
-        if (file != null) {
-            return new ImportTopicMapTask(this, file);
-        }
-        return null;
-    }
-
+    /**
+     * Creates and shows a file open dialog.
+     *
+     * @param filter A file filter or {@code null}.
+     * @return A file or {@code null} if no file was chosen.
+     */
     private File _openFile(final FileFilter filter) {
         final JFileChooser fc = _fileChooser(filter);
         if (JFileChooser.APPROVE_OPTION == fc.showOpenDialog(getMainFrame())) {
             final File file = fc.getSelectedFile();
             _lastDirectory = file.getAbsolutePath();
             return file;
+        }
+        return null;
+    }
+
+    /**
+     * 
+     *
+     * @return
+     */
+    @Action
+    public ImportTopicMapTask open() {
+        final File file = _openFile(_TM_FILE_FILTER);
+        if (file != null) {
+            return new ImportTopicMapTask(this, file);
         }
         return null;
     }
@@ -137,11 +180,6 @@ public final class Mappish extends SingleFrameApplication {
     private Query _selectedQuery() {
         final IQueryView view = _queryView();
         return view != null ? view.getQuery() : null;
-    }
-
-    @Action
-    public void close() {
-        
     }
 
     @Action
@@ -320,10 +358,10 @@ public final class Mappish extends SingleFrameApplication {
         @Override
         protected void succeeded(ITopicMapSource source) {
             _setWorking(false);
-            final QueryFrame frame = new QueryFrame(this.getApplication(), source);
+            final QueryFrame frame = new QueryFrame(getApplication(), source);
             _desktop.add(frame);
             _desktop.setSelectedFrame(frame);
-            frame.addInternalFrameListener(new FrameListener());
+            frame.addInternalFrameListener(_frameListener);
             frame.setVisible(true);
         }
     }

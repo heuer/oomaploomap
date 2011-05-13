@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.semagia.mappish.query;
+package com.semagia.ooloo.query;
 
 /**
  * 
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
-public class QueryException extends Exception {
+public interface IResult {
 
-    private static final long serialVersionUID = 1L;
+    public void close();
 
-    public QueryException(final String msg) {
-        super(msg);
-    }
+    public String[] getColumnNames();
 
-    public QueryException(final Throwable cause) {
-        super(cause);
-    }
+    public String[] getValues();
+
+    public boolean next();
 
 }
