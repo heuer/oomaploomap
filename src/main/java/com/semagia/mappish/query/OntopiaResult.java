@@ -15,7 +15,6 @@
  */
 package com.semagia.mappish.query;
 
-import net.ontopia.topicmaps.core.AssociationIF;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.query.core.QueryResultIF;
@@ -24,10 +23,9 @@ import net.ontopia.utils.StringifierIF;
 
 
 /**
- * 
+ * {@link IResult} implementation that adapts a {@link QueryResultIF}.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
- * @version $Rev:$ - $Date:$
  */
 public final class OntopiaResult implements IResult {
 
@@ -40,6 +38,9 @@ public final class OntopiaResult implements IResult {
         _width = result.getWidth();
     }
 
+    /* (non-Javadoc)
+     * @see com.semagia.mappish.query.IResult#getColumnNames()
+     */
     @Override
     public String[] getColumnNames() {
         return _result.getColumnNames();
@@ -55,9 +56,6 @@ public final class OntopiaResult implements IResult {
         for (int i=0; i<_width; i++) {
             if (objects[i] instanceof TopicIF) {
                 row[i] = _TOPIC2STR.toString(objects[i]);
-            }
-            else if (objects[i] instanceof AssociationIF) {
-                row[i] = "Association type='" + _TOPIC2STR.toString(((AssociationIF) objects[i]).getType()); 
             }
             else if (objects[i] instanceof TopicNameIF) {
                 row[i] = ((TopicNameIF) objects[i]).getValue();

@@ -24,11 +24,12 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import com.semagia.mappish.query.QueryLanguage;
 
 /**
- * 
+ * TokenMakerFactory implementation that supports only the plain style tokenizer
+ * and all Topic Maps query language tokenizers.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
-public class TokenMakerFactory extends AbstractTokenMakerFactory {
+public final class TokenMakerFactory extends AbstractTokenMakerFactory {
 
     /* (non-Javadoc)
      * @see org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory#createTokenMakerKeyToClassNameMap()

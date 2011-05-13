@@ -45,7 +45,6 @@ public final class ImportUtils {
         if (deser == null) {
             throw new ImportException("Cannot import " + file.getName() + ". No deserializer found.");
         }
-        
         deser.setMapHandler(handler);
         // Enable more lenient topic map parsing
         deser.setProperty(Property.VALIDATE, Boolean.FALSE);
@@ -78,4 +77,5 @@ public final class ImportUtils {
         }
         return DeserializerRegistry.getInstance().createDeserializer(syntax);
     }
+
 }

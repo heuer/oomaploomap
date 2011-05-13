@@ -43,7 +43,8 @@ import com.semagia.mappish.query.Query;
 import com.semagia.mappish.query.QueryException;
 
 /**
- * 
+ * The topic map system keeps track about the loaded topic maps and can issue
+ * queries against topic maps.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
@@ -63,9 +64,9 @@ public final class TopicMapSystem {
     }
 
     /**
-     * 
+     * Returns an array of loaded topic maps.
      *
-     * @return
+     * @return A (maybe empty) array of topic map sources.
      */
     public ITopicMapSource[] getTopicMapSources() {
         return _sources.values().toArray(new ITopicMapSource[_sources.size()]);
