@@ -17,6 +17,7 @@ package com.semagia.ooloo.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
@@ -32,6 +33,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit;
@@ -93,7 +95,19 @@ final class DefaultQueryView extends View implements IQueryView {
         _queryEditor = new TextEditorPane(TextEditorPane.INSERT_MODE);
         final RTextScrollPane textPane = new RTextScrollPane(_queryEditor);
         textPane.setPreferredSize(new Dimension(600, 350));
-        _results = new JTable();
+        _results = new JTable() {
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column){
+                Component returnComp = super.prepareRenderer(renderer, row, column);
+                Color alternateColor = new Color(238, 238, 238);
+                Color whiteColor = Color.WHITE;
+                if (!returnComp.getBackground().equals(getSelectionBackground())){
+                    Color bg = (row % 2 == 0 ? alternateColor : whiteColor);
+                    returnComp .setBackground(bg);
+                    bg = null;
+                }
+                return returnComp;
+            };
+        };
         splitter.setLeftComponent(textPane);
         final JPanel panel = new JPanel(new BorderLayout());
         panel.add(_createToolBar(), BorderLayout.NORTH);
@@ -107,6 +121,7 @@ final class DefaultQueryView extends View implements IQueryView {
 
     private void _initQueryEditor() {
         _queryEditor.getPopupMenu().addSeparator();
+        _queryEditor.setCurrentLineHighlightColor(new Color(255, 255, 196));
         javax.swing.Action a = new RSyntaxTextAreaEditorKit.IncreaseFontSizeAction("Increse font size",
                 null, null,
                 null,
@@ -127,13 +142,12 @@ final class DefaultQueryView extends View implements IQueryView {
         queryLanguageMenu.add(getApplication().getContext().getActionMap().get("queryLanguageToma"));
         _queryEditor.getPopupMenu().add(queryLanguageMenu);
         _queryEditor.setTabsEmulated(true);
-        _queryEditor.setWhitespaceVisible(true);
         _queryEditor.setTabSize(4);
         setQuery(Query.build(QueryLanguage.TMQL, ""));
 
         //TODO: Make this configurable and find better colors
         final SyntaxScheme scheme = _queryEditor.getSyntaxScheme();
-        scheme.styles[Token.FUNCTION].foreground = Color.BLACK; 
+        scheme.styles[Token.FUNCTION].foreground = Color.BLACK;
     }
 
     private JComponent _createToolBar() {
@@ -156,9 +170,9 @@ final class DefaultQueryView extends View implements IQueryView {
     @Override
     public void setQuery(final Query query) {
         _query = query;
-        setQueryLanguage(query.getQueryLanguage());
         _queryEditor.setText(query.getQueryString());
         _queryEditor.setCaretPosition(0);
+        setQueryLanguage(query.getQueryLanguage());
     }
 
     /* (non-Javadoc)
@@ -167,6 +181,7 @@ final class DefaultQueryView extends View implements IQueryView {
     @Override
     public void setQueryLanguage(QueryLanguage lang) {
         _queryEditor.setSyntaxEditingStyle(lang.name());
+        _queryEditor.setWhitespaceVisible(true);
     }
 
     /* (non-Javadoc)
@@ -197,7 +212,6 @@ final class DefaultQueryView extends View implements IQueryView {
         else {
             _results.setModel(new DefaultTableModel(_getData(result), new Vector<String>(Arrays.asList(result.getColumnNames()))));
             result.close();
-            _results.repaint();
         }
     }
 

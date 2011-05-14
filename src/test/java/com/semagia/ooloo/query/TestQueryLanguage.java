@@ -26,9 +26,11 @@ public class TestQueryLanguage extends TestCase {
 
     public void testByExtension() {
         assertEquals(QueryLanguage.TMQL, QueryLanguage.fromExtension("tq"));
-        assertEquals(QueryLanguage.TOLOG, QueryLanguage.fromExtension("tl"));
         assertEquals(QueryLanguage.TMQL, QueryLanguage.fromExtension("tQ"));
+        assertEquals(QueryLanguage.TOLOG, QueryLanguage.fromExtension("tl"));
         assertEquals(QueryLanguage.TOLOG, QueryLanguage.fromExtension("tL"));
+        assertEquals(QueryLanguage.TOMA, QueryLanguage.fromExtension("ta"));
+        assertEquals(QueryLanguage.TOMA, QueryLanguage.fromExtension("TA"));
     }
 
     public void testByExtensionTologIllegal() {
