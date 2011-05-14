@@ -101,7 +101,8 @@ dependencies {
 
     runtime 'org.tmapi:tmapi:(2.0.2,)',
             'net.ontopia:toma:1.0.1',
-            'de.topicmapslab.tmql4j:tmql4ontopia:2.6.5'
+            'de.topicmapslab.tmql4j:tmql4ontopia:2.6.5',
+            'org.slf4j:slf4j-nop:(1.5.8,)'
 
     testCompile 'junit:junit:4.8.1'
 
