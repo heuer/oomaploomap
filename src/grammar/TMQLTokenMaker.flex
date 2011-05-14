@@ -215,6 +215,7 @@ Comment         = "#"[^\r\n]*
     | "every"
     | "iko"
     | "isa"
+    | "where"
     // Axes
     | "types"
     | "instances"
