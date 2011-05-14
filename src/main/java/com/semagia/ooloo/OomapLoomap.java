@@ -307,7 +307,6 @@ public final class OomapLoomap extends SingleFrameApplication {
         public void internalFrameActivated(InternalFrameEvent evt) {
             _setHasActiveFrame(true);
         }
-
     }
 
 
