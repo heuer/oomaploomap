@@ -97,7 +97,7 @@ public final class OomapLoomap extends SingleFrameApplication {
         getMainFrame().add(_createToolBar(), BorderLayout.NORTH);
         getMainFrame().setPreferredSize(new Dimension(500, 400));
         show(_createMainPanel());
-        _setActiveFrame(false);
+        _setHasActiveFrame(false);
     }
 
     /* (non-Javadoc)
@@ -109,7 +109,7 @@ public final class OomapLoomap extends SingleFrameApplication {
         _tmSys.close();
     }
 
-    private void _setActiveFrame(boolean active) {
+    private void _setHasActiveFrame(boolean active) {
         getContext().getActionMap().get("runQuery").setEnabled(active);
         getContext().getActionMap().get("loadQuery").setEnabled(active);
         getContext().getActionMap().get("saveQuery").setEnabled(active);
@@ -297,7 +297,7 @@ public final class OomapLoomap extends SingleFrameApplication {
          */
         @Override
         public void internalFrameClosed(InternalFrameEvent evt) {
-            _setActiveFrame(false);
+            _setHasActiveFrame(false);
             _tmSys.closeSource(((IQueryView) evt.getInternalFrame()).getTopicMapSource());
         }
 
@@ -306,7 +306,7 @@ public final class OomapLoomap extends SingleFrameApplication {
          */
         @Override
         public void internalFrameActivated(InternalFrameEvent evt) {
-            _setActiveFrame(true);
+            _setHasActiveFrame(true);
         }
 
 
