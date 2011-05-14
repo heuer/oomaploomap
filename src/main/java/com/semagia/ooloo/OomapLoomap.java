@@ -47,9 +47,8 @@ import com.semagia.ooloo.query.IResult;
 import com.semagia.ooloo.query.Query;
 import com.semagia.ooloo.query.QueryLanguage;
 import com.semagia.ooloo.ui.IQueryView;
-import com.semagia.ooloo.ui.Menu;
+import com.semagia.ooloo.ui.UIUtils;
 import com.semagia.ooloo.ui.QueryFrame;
-import com.semagia.ooloo.ui.ToolBar;
 
 /**
  * Main application.
@@ -123,9 +122,9 @@ public final class OomapLoomap extends SingleFrameApplication {
      */
     private JMenuBar _createMenuBar() {
         final JMenuBar menuBar = new JMenuBar();
-        menuBar.add(Menu.fromActions(this, "File", new String[]{"open", "---", "quit"}));
-        menuBar.add(Menu.fromActions(this, "Edit", new String[]{"cut", "copy", "paste"}));
-        menuBar.add(Menu.fromActions(this, "Query", new String[]{"loadQuery", "---", "saveQuery", "saveAsQuery", "---", "runQuery"}));
+        menuBar.add(UIUtils.menuFromActions(this, "File", new String[]{"open", "---", "quit"}));
+        menuBar.add(UIUtils.menuFromActions(this, "Edit", new String[]{"cut", "copy", "paste"}));
+        menuBar.add(UIUtils.menuFromActions(this, "Query", new String[]{"loadQuery", "---", "saveQuery", "saveAsQuery", "---", "runQuery"}));
         return menuBar;
     }
 
@@ -137,7 +136,7 @@ public final class OomapLoomap extends SingleFrameApplication {
     private JComponent _createToolBar() {
         _progressBar = new JProgressBar();
         _progressBar.setBorderPainted(false);
-        final JToolBar toolBar = ToolBar.fromActions(this, new String[] {"open", "---", "cut", "copy", "paste", "---", "quit" });
+        final JToolBar toolBar = UIUtils.toolbarFromActions(this, new String[] {"open", "---", "cut", "copy", "paste", "---", "quit" });
         toolBar.add(_progressBar);
         return toolBar;
     }
@@ -309,8 +308,8 @@ public final class OomapLoomap extends SingleFrameApplication {
             _setHasActiveFrame(true);
         }
 
-
     }
+
 
     private final class RunQueryTask extends Task<IResult, Void> {
 
@@ -343,6 +342,7 @@ public final class OomapLoomap extends SingleFrameApplication {
             _queryView.setResult(result);
         }
     }
+
 
     private final class ImportTopicMapTask extends Task<ITopicMapSource, Void> {
 

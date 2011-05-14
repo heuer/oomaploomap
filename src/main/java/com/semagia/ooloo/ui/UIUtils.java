@@ -17,30 +17,53 @@ package com.semagia.ooloo.ui;
 
 import javax.swing.ActionMap;
 import javax.swing.JButton;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JToolBar;
 
 import org.jdesktop.application.Application;
 
 /**
- * Utility functions to create {@link JToolBar}s.
+ * Utility functions to create {@link JMenuBar}s and {@link JToolBar}s.
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
-public final class ToolBar {
+public final class UIUtils {
 
-    private ToolBar() {
-        super();
+    private UIUtils() {
+        // noop.
+    }
+
+    /**
+     * Creates a menu from the provided action names {@code ---} indicates a separator.
+     *
+     * @param app The application.
+     * @param name
+     * @param actionNames Action names.
+     * @return A menu.
+     */
+    public static JMenu menuFromActions(final Application app, final String name, 
+                                            final String[] actionNames) {
+        final ActionMap actionMap = app.getContext().getActionMap();
+        final JMenu menu = new JMenu(name);
+        for (String actionName: actionNames) {
+            if (actionName.equals("---")) {
+                menu.addSeparator();
+                continue;
+            }
+            menu.add(actionMap.get(actionName));
+        }
+        return menu;
     }
 
     /**
      * Creates a toolbar from the provided action names {@code ---} indicates a separator.
      * 
-     * 
      * @param app The application.
      * @param actionNames Action names.
      * @return A toolbar.
      */
-    public static JToolBar fromActions(final Application app, final String[] actionNames) {
+    public static JToolBar toolbarFromActions(final Application app, final String[] actionNames) {
         final ActionMap actionMap = app.getContext().getActionMap();
         final JToolBar toolBar = new JToolBar();
         toolBar.setFloatable(false);
@@ -58,4 +81,5 @@ public final class ToolBar {
         }
         return toolBar;
     }
+
 }

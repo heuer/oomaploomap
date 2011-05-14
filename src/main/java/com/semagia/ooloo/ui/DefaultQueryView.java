@@ -137,7 +137,7 @@ final class DefaultQueryView extends View implements IQueryView {
     }
 
     private JComponent _createToolBar() {
-        final JToolBar toolBar = ToolBar.fromActions(super.getApplication(), new String[] {"loadQuery", "saveQuery", "saveAsQuery", "---", "runQuery"});
+        final JToolBar toolBar = UIUtils.toolbarFromActions(super.getApplication(), new String[] {"loadQuery", "saveQuery", "saveAsQuery", "---", "runQuery"});
         toolBar.add(_progressBar);
         return toolBar;
     }
