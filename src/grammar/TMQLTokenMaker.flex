@@ -233,6 +233,19 @@ Comment         = "#"[^\r\n]*
     | "atomify"         { addToken(Token.RESERVED_WORD); }
 
     "true"|"false"      { addToken(Token.LITERAL_BOOLEAN); }
+    
+    ">>"
+    | "<<"
+    | "/"
+    | "//"
+    | "<-"
+    | "->"
+    | "<->"
+    | "~~>"
+    | "<~~"
+    | "=="
+    | "--"
+    | "++"              { addToken(Token.OPERATOR); }
 
     {QName}             { addToken(Token.IDENTIFIER); }
     {Identifier}        { addToken(Token.IDENTIFIER); }
