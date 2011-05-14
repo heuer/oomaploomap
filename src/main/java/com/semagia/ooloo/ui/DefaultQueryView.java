@@ -89,6 +89,7 @@ final class DefaultQueryView extends View implements IQueryView {
     /* (non-Javadoc)
      * @see org.jdesktop.application.View#getComponent()
      */
+    @SuppressWarnings("serial")
     @Override
     public JComponent getComponent() {
         JSplitPane splitter = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -97,15 +98,13 @@ final class DefaultQueryView extends View implements IQueryView {
         textPane.setPreferredSize(new Dimension(600, 350));
         _results = new JTable() {
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column){
-                Component returnComp = super.prepareRenderer(renderer, row, column);
+                Component res = super.prepareRenderer(renderer, row, column);
                 Color alternateColor = new Color(238, 238, 238);
                 Color whiteColor = Color.WHITE;
-                if (!returnComp.getBackground().equals(getSelectionBackground())){
-                    Color bg = (row % 2 == 0 ? alternateColor : whiteColor);
-                    returnComp .setBackground(bg);
-                    bg = null;
+                if (!res.getBackground().equals(getSelectionBackground())) {
+                    res.setBackground(row % 2 == 0 ? alternateColor : whiteColor);
                 }
-                return returnComp;
+                return res;
             };
         };
         splitter.setLeftComponent(textPane);
