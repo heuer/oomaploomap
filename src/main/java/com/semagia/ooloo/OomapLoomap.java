@@ -280,6 +280,12 @@ public final class OomapLoomap extends SingleFrameApplication {
         return new RunQueryTask(this, _queryView());
     }
 
+    private void _setBusy(boolean busy) {
+        _progressBar.setIndeterminate(busy);
+        _progressBar.setBorderPainted(busy);
+        getContext().getActionMap().get("open").setEnabled(!busy);
+    }
+
     private void _showErrorDialog(final Throwable ex) {
         _showErrorDialog(ex, ex.getMessage());
     }
@@ -352,15 +358,9 @@ public final class OomapLoomap extends SingleFrameApplication {
             _file = file;
         }
 
-        private void _setWorking(boolean working) {
-            _progressBar.setIndeterminate(working);
-            _progressBar.setBorderPainted(working);
-            getApplication().getContext().getActionMap().get("open").setEnabled(!working);
-        }
-
         @Override
         protected ITopicMapSource doInBackground() throws Exception {
-            _setWorking(true);
+            _setBusy(true);
             return _tmSys.loadSource(_file.toURI());
         }
 
@@ -369,13 +369,13 @@ public final class OomapLoomap extends SingleFrameApplication {
          */
         @Override
         protected void failed(Throwable cause) {
-            _setWorking(false);
+            _setBusy(false);
             _showErrorDialog(cause, "Import failed");
         }
 
         @Override
         protected void succeeded(ITopicMapSource source) {
-            _setWorking(false);
+            _setBusy(false);
             final QueryFrame frame = new QueryFrame(getApplication(), source);
             _desktop.add(frame);
             _desktop.setSelectedFrame(frame);
@@ -383,4 +383,5 @@ public final class OomapLoomap extends SingleFrameApplication {
             frame.setVisible(true);
         }
     }
+
 }
