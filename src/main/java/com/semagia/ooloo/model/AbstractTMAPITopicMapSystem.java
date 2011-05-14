@@ -93,6 +93,9 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
      */
     @Override
     public final ITopicMapSource loadSource(final URI uri) throws IOException {
+        if (uri == null) {
+            throw new IllegalArgumentException("The IRI must not be null");
+        }
         final String iri = uri.toString();
         TopicMapSource src = _sources.get(iri);
         if (src == null) {
