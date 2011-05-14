@@ -96,12 +96,11 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
         if (uri == null) {
             throw new IllegalArgumentException("The IRI must not be null");
         }
-        final String iri = uri.toString();
-        TopicMapSource src = _sources.get(iri);
+        TopicMapSource src = _sources.get(uri);
         if (src == null) {
             TopicMap tm = null;
             try {
-                tm = _tmSys.createTopicMap(iri);
+                tm = _tmSys.createTopicMap(uri.toString());
             }
             catch (TopicMapExistsException ex) {
                 // Shouldn't happen
@@ -116,7 +115,7 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
                 }
             }
             src = new TopicMapSource(uri, name);
-            _sources.put(uri, src);
+            _sources.put(src.getURI(), src);
         }
         src.usage++;
         return src;
@@ -138,11 +137,12 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
     public final void closeSource(final ITopicMapSource src) {
         final TopicMapSource source = _sources.get(src.getURI());
         if (source != null) {
-            final String iri = src.getURI().toString();
+            System.out.println(source.usage);
             source.usage--;
+            System.out.println(source.usage);
             if (source.usage == 0) {
-                _sources.remove(src.getURI());
-                _tmSys.getTopicMap(iri).remove();
+                _sources.remove(source.getURI());
+                _tmSys.getTopicMap(source.getURI().toString()).remove();
             }
         }
     }
