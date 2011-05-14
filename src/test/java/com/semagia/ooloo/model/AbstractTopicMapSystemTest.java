@@ -90,6 +90,9 @@ public abstract class AbstractTopicMapSystemTest extends TestCase {
         assertTrue(sources.length == 1);
         assertEquals(sources[0].getURI(), src.getURI());
         assertEquals(sources[0].getName(), src.getName());
+        _sys.closeSource(src);
+        sources = _sys.getTopicMapSources();
+        assertEquals(0, sources.length);
     }
 
     public void testImport2() throws IOException, URISyntaxException {
@@ -106,6 +109,9 @@ public abstract class AbstractTopicMapSystemTest extends TestCase {
         assertTrue(sources.length == 1);
         assertEquals(sources[0].getURI(), src.getURI());
         assertEquals(sources[0].getName(), src.getName());
+        _sys.closeSource(src);
+        sources = _sys.getTopicMapSources();
+        assertEquals(0, sources.length);
     }
 
 }

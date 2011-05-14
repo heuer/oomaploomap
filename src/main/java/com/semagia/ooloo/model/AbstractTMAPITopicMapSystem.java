@@ -46,11 +46,11 @@ import com.semagia.ooloo.query.QueryException;
 public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
 
 
-    private final Map<String, TopicMapSource> _sources;
+    private final Map<URI, TopicMapSource> _sources;
     private final TopicMapSystem _tmSys;
 
     protected AbstractTMAPITopicMapSystem() {
-        _sources = new HashMap<String, TopicMapSource>();
+        _sources = new HashMap<URI, TopicMapSource>();
         _tmSys = createTopicMapSystem();
     }
 
@@ -116,7 +116,7 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
                 }
             }
             src = new TopicMapSource(uri, name);
-            _sources.put(iri, src);
+            _sources.put(uri, src);
         }
         src.usage++;
         return src;
@@ -164,7 +164,7 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
 
         private final URI _iri;
         private final String _name;
-        private int usage;
+        private int usage = 0;
 
         public TopicMapSource(final URI iri, final String name) {
             _iri = iri;
