@@ -129,8 +129,7 @@ public final class ErrorDialog extends JDialog {
 
         pack();
         setLocationRelativeTo(owner);
-        
-        
+
         showDetails.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (_stacktraceBar.isVisible()) {
@@ -167,8 +166,7 @@ public final class ErrorDialog extends JDialog {
      * Creates a non-editable widget to display the detailed stack trace.
      */
     String generateStackTrace(Throwable t) {
-        StringBuilder buffer = generateStackTrace(t, null);
-        return buffer.toString();
+        return generateStackTrace(t, null).toString();
     }
     
     /**

@@ -59,7 +59,7 @@ public final class FileUtils {
     public static String read(final File file, final String encoding) throws IOException {
         final Reader in = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
         final char[] cbuffer = new char[2048];
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         int i = 0;
         while((i=in.read(cbuffer)) != -1) {
             buffer.append(cbuffer, 0, i);
