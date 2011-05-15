@@ -243,19 +243,5 @@ public final class ErrorDialog extends JDialog {
         }
         return false;
     }
-    
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        String m1 = "This is test error with very very very very very long line of error message that " 
-            + " should not be in a single line. Another message string that should be split across word." +
-            "The quick brown fox jumpled over the lazy dog";
-        String m2 = "This is another test error with very long line of error message that " 
-            + " should not be in a single line";
-        Throwable nested = new NumberFormatException(m2);
-        Throwable top = new IllegalArgumentException(m1, nested);
-        new ErrorDialog(top).setVisible(true);
-    }
 
 }
