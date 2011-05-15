@@ -22,9 +22,9 @@ import java.io.IOException;
 
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.JToolBar;
 import javax.swing.event.InternalFrameAdapter;
@@ -46,6 +46,7 @@ import com.semagia.ooloo.model.ITopicMapSystem.ITopicMapSource;
 import com.semagia.ooloo.query.IResult;
 import com.semagia.ooloo.query.Query;
 import com.semagia.ooloo.query.QueryLanguage;
+import com.semagia.ooloo.ui.ErrorDialog;
 import com.semagia.ooloo.ui.IQueryView;
 import com.semagia.ooloo.ui.UIUtils;
 import com.semagia.ooloo.ui.QueryFrame;
@@ -291,7 +292,8 @@ public final class OomapLoomap extends SingleFrameApplication {
     }
 
     private void _showErrorDialog(final Throwable ex, final String msg) {
-        JOptionPane.showMessageDialog(getMainFrame(), msg, "Error", JOptionPane.ERROR_MESSAGE);
+        final JDialog errorDialog = new ErrorDialog(ex);
+        errorDialog.setVisible(true);
     }
 
 

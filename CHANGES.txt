@@ -1,0 +1,22 @@
+==========
+Change Log
+==========
+
+0.0.3 -- 2011-05-15
+-------------------
+* Internal code refactoring
+* Added more tests
+* Added menu bar
+* Updated syntax highlighters
+* Added keyboard bindings
+* Unused topic maps weren't closed automatically. Fixed.
+
+
+0.0.2 -- 2011-05-12
+-------------------
+* Added support for Toma
+
+
+0.0.1 -- 2011-05-11
+-------------------
+* Initial release
