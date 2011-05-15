@@ -143,8 +143,7 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
      */
     @Override
     public final IResult executeQuery(final URI uri, final Query query) throws QueryException {
-        final String iri = uri.toString();
-        return executeQuery(_tmSys.getTopicMap(iri), query);
+        return executeQuery(_tmSys.getTopicMap(uri.toString()), query);
     }
 
     /* (non-Javadoc)
