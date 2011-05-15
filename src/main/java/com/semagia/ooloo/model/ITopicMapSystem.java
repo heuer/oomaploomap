@@ -43,7 +43,16 @@ public interface ITopicMapSystem {
      *
      * @return A (maybe empty) array of topic map sources.
      */
-    public ITopicMapSource[] getTopicMapSources();
+    public ITopicMapSource[] getSources();
+
+    /**
+     * Returns a {@link ITopicMapSource} iff it was previously loaded.
+     *
+     * @param uri The IRI of the source.
+     * @return An {@link ITopicMapSource} instance if the it was loaded or 
+     *          {@code null} if the topic map does not exist.
+     */
+    public ITopicMapSource getSource(final URI uri);
 
     /**
      * Loads the provided IRI into the system.

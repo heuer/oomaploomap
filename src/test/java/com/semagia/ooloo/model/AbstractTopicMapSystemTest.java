@@ -61,7 +61,7 @@ public abstract class AbstractTopicMapSystemTest extends TestCase {
     }
 
     public void testTMSources() {
-        final ITopicMapSource[] sources = _sys.getTopicMapSources();
+        final ITopicMapSource[] sources = _sys.getSources();
         assertNotNull(sources);
         assertTrue(sources.length == 0);
     }
@@ -77,7 +77,7 @@ public abstract class AbstractTopicMapSystemTest extends TestCase {
     }
 
     public void testImport() throws IOException, URISyntaxException {
-        ITopicMapSource[] sources = _sys.getTopicMapSources();
+        ITopicMapSource[] sources = _sys.getSources();
         assertTrue(sources.length == 0);
         final URL url = AbstractTopicMapSystemTest.class.getResource("/test-tm.ctm");
         assertNotNull(url);
@@ -86,14 +86,14 @@ public abstract class AbstractTopicMapSystemTest extends TestCase {
         assertNotNull(src);
         assertEquals(uri, src.getURI());
         assertNull(src.getName());
-        sources = _sys.getTopicMapSources();
+        sources = _sys.getSources();
         assertTrue(sources.length == 1);
         assertEquals(sources[0].getURI(), src.getURI());
         assertEquals(sources[0].getName(), src.getName());
     }
 
     public void testImport2() throws IOException, URISyntaxException {
-        ITopicMapSource[] sources = _sys.getTopicMapSources();
+        ITopicMapSource[] sources = _sys.getSources();
         assertTrue(sources.length == 0);
         final URL url = AbstractTopicMapSystemTest.class.getResource("/test-tm-with-name.ctm");
         assertNotNull(url);
@@ -102,7 +102,7 @@ public abstract class AbstractTopicMapSystemTest extends TestCase {
         assertNotNull(src);
         assertEquals(uri, src.getURI());
         assertEquals("Name", src.getName());
-        sources = _sys.getTopicMapSources();
+        sources = _sys.getSources();
         assertTrue(sources.length == 1);
         assertEquals(sources[0].getURI(), src.getURI());
         assertEquals(sources[0].getName(), src.getName());
@@ -110,30 +110,30 @@ public abstract class AbstractTopicMapSystemTest extends TestCase {
     }
 
     public void testImportClose() throws IOException, URISyntaxException {
-        ITopicMapSource[] sources = _sys.getTopicMapSources();
+        ITopicMapSource[] sources = _sys.getSources();
         assertTrue(sources.length == 0);
         final URL url = AbstractTopicMapSystemTest.class.getResource("/test-tm-with-name.ctm");
         assertNotNull(url);
         final URI uri = url.toURI();
         ITopicMapSource src = _sys.loadSource(uri);
         _sys.closeSource(src);
-        sources = _sys.getTopicMapSources();
+        sources = _sys.getSources();
         assertEquals(0, sources.length);
 
         src = _sys.loadSource(uri);
-        sources = _sys.getTopicMapSources();
+        sources = _sys.getSources();
         assertEquals(1, sources.length);
         assertSame(src, _sys.loadSource(uri));
         _sys.closeSource(src);
-        sources = _sys.getTopicMapSources();
+        sources = _sys.getSources();
         assertEquals(1, sources.length);
         _sys.closeSource(src);
-        sources = _sys.getTopicMapSources();
+        sources = _sys.getSources();
         assertEquals(0, sources.length);
     }
 
     public void testImportFailure() throws URISyntaxException {
-        ITopicMapSource[] sources = _sys.getTopicMapSources();
+        ITopicMapSource[] sources = _sys.getSources();
         assertTrue(sources.length == 0);
         final URL url = AbstractTopicMapSystemTest.class.getResource("/test-tm-with-syntax-error.ctm");
         assertNotNull(url);
@@ -146,7 +146,7 @@ public abstract class AbstractTopicMapSystemTest extends TestCase {
             // noop.
         }
         assertNull(src);
-        sources = _sys.getTopicMapSources();
+        sources = _sys.getSources();
         assertTrue(sources.length == 0);
     }
 }

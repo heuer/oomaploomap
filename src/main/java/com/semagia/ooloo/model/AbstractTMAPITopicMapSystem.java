@@ -81,11 +81,22 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
     protected abstract IResult executeQuery(final TopicMap topicMap, final Query query) throws QueryException;
 
     /* (non-Javadoc)
-     * @see com.semagia.ooloo.model.ITopicMapSystem#getTopicMapSources()
+     * @see com.semagia.ooloo.model.ITopicMapSystem#getSources()
      */
     @Override
-    public final ITopicMapSource[] getTopicMapSources() {
+    public final ITopicMapSource[] getSources() {
         return _sources.values().toArray(new ITopicMapSource[_sources.size()]);
+    }
+
+    /* (non-Javadoc)
+     * @see com.semagia.ooloo.model.ITopicMapSystem#getSource(java.net.URI)
+     */
+    @Override
+    public ITopicMapSource getSource(final URI uri) {
+        if (uri == null) {
+            throw new IllegalArgumentException("The IRI must not be null");
+        }
+        return _sources.get(uri);
     }
 
     /* (non-Javadoc)
