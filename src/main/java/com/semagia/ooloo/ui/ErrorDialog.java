@@ -82,7 +82,6 @@ public final class ErrorDialog extends JDialog {
      */
     public ErrorDialog(JComponent owner, Icon icon, Throwable t) {
         super();
-        t.printStackTrace();
         setTitle(t.getClass().getName());
         setModal(true);
         if (icon != null && icon instanceof ImageIcon) 
