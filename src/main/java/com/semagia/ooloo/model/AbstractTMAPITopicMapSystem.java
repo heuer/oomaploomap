@@ -143,9 +143,7 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
     public final void closeSource(final ITopicMapSource src) {
         final TopicMapSource source = _sources.get(src.getURI());
         if (source != null) {
-            System.out.println(source.usage);
             source.usage--;
-            System.out.println(source.usage);
             if (source.usage == 0) {
                 _sources.remove(source.getURI());
                 _tmSys.getTopicMap(source.getURI().toString()).remove();
