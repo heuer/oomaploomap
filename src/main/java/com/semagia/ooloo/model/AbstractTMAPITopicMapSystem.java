@@ -139,11 +139,11 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
     }
 
     /* (non-Javadoc)
-     * @see com.semagia.ooloo.model.ITopicMapSystem#executeQuery(com.semagia.ooloo.model.ITopicMapSystem.ITopicMapSource, com.semagia.ooloo.query.Query)
+     * @see com.semagia.ooloo.model.ITopicMapSystem#executeQuery(java.net.URI, com.semagia.ooloo.query.Query)
      */
     @Override
-    public final IResult executeQuery(final ITopicMapSource src, final Query query) throws QueryException {
-        final String iri = src.getURI().toString();
+    public final IResult executeQuery(final URI uri, final Query query) throws QueryException {
+        final String iri = uri.toString();
         return executeQuery(_tmSys.getTopicMap(iri), query);
     }
 
