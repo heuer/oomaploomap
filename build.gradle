@@ -4,7 +4,7 @@
 import static groovy.io.FileType.*
 
 group = 'com.semagia.ooloo'
-version = '0.0.3'
+version = '0.0.4'
 bundleVersion = version
 
 projectName = 'Oomap Loomap'
