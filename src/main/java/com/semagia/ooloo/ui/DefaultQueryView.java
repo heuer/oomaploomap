@@ -54,7 +54,7 @@ import com.semagia.ooloo.query.QueryLanguage;
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
-final class DefaultQueryView extends View implements IQueryView {
+public final class DefaultQueryView extends View implements IQueryView {
 
     private static final TableModel _NOOP_TABLE_MODEL = new DefaultTableModel();
 
