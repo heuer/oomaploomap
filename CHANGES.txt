@@ -2,6 +2,12 @@
 Change Log
 ==========
 
+0.0.4 -- 2011-05-dd
+-------------------
+* After an import failure it wasn't possible to re-import the topic map again. 
+  Fixed.
+
+
 0.0.3 -- 2011-05-15
 -------------------
 * Internal code refactoring
