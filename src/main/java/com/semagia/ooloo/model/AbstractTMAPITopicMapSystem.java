@@ -105,7 +105,13 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
             catch (TopicMapExistsException ex) {
                 // Shouldn't happen
             }
-            ImportUtils.importTopicMap(uri, createMapHandler(tm));
+            try {
+                ImportUtils.importTopicMap(uri, createMapHandler(tm));
+            }
+            catch (IOException ex) {
+                tm.remove();
+                throw ex;
+            }
             String name = null;
             final Topic reifier = tm.getReifier();
             if (reifier != null) {

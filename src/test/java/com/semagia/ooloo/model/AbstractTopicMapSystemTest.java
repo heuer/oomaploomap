@@ -132,4 +132,21 @@ public abstract class AbstractTopicMapSystemTest extends TestCase {
         assertEquals(0, sources.length);
     }
 
+    public void testImportFailure() throws URISyntaxException {
+        ITopicMapSource[] sources = _sys.getTopicMapSources();
+        assertTrue(sources.length == 0);
+        final URL url = AbstractTopicMapSystemTest.class.getResource("/test-tm-with-syntax-error.ctm");
+        assertNotNull(url);
+        final URI uri = url.toURI();
+        ITopicMapSource src = null;
+        try {
+             src = _sys.loadSource(uri);
+        }
+        catch (IOException ex) {
+            // noop.
+        }
+        assertNull(src);
+        sources = _sys.getTopicMapSources();
+        assertTrue(sources.length == 0);
+    }
 }
