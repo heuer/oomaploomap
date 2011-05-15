@@ -296,6 +296,14 @@ public final class OomapLoomap extends SingleFrameApplication {
         errorDialog.setVisible(true);
     }
 
+    private void _createQueryPane(final ITopicMapSource source) {
+        final QueryFrame frame = new QueryFrame(this, source);
+        _desktop.add(frame);
+        _desktop.setSelectedFrame(frame);
+        frame.addInternalFrameListener(_frameListener);
+        frame.setVisible(true);
+    }
+
 
     private final class FrameListener extends InternalFrameAdapter {
 
@@ -378,11 +386,7 @@ public final class OomapLoomap extends SingleFrameApplication {
         @Override
         protected void succeeded(ITopicMapSource source) {
             _setBusy(false);
-            final QueryFrame frame = new QueryFrame(getApplication(), source);
-            _desktop.add(frame);
-            _desktop.setSelectedFrame(frame);
-            frame.addInternalFrameListener(_frameListener);
-            frame.setVisible(true);
+            _createQueryPane(source);
         }
     }
 
