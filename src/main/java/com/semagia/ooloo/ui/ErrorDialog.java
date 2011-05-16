@@ -30,13 +30,13 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 /*
- * This class was taken from org.apache.openjpa.swing
+ * This class was originally taken from org.apache.openjpa.swing
  * 
  * C.f. <http://svn.apache.org/repos/asf/openjpa/tools/trunk/openjpa-tools/src/main/java/org/apache/openjpa/swing/ErrorDialog.java>
  */
@@ -44,6 +44,7 @@ import javax.swing.JScrollPane;
  * A dialog to display runtime error.
  * 
  * @author Pinaki Poddar
+ * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
 @SuppressWarnings("serial")
 public final class ErrorDialog extends JDialog {
@@ -52,12 +53,12 @@ public final class ErrorDialog extends JDialog {
             "javax.swing.", 
             "sun.reflect.",
             "java.util.concurrent.");
-    private static String NEWLINE = "<br>";
-    private static String INDENT  = "&nbsp;&nbsp;";
+    private static String NEWLINE = "\n";
+    private static String INDENT  = "    ";
     private final  JCheckBox filter;
     private final  JLabel _header;
     private JComponent   _main;
-    private JEditorPane  _stacktrace;
+    private JTextArea  _stacktrace;
     private JScrollPane  _stacktraceBar;
     private final Throwable _error;
     
@@ -92,7 +93,7 @@ public final class ErrorDialog extends JDialog {
         _main.setLayout(new BorderLayout());
         
         _header = new JLabel();
-        _header.setText(formatMessage(_error, false, true));
+        _header.setText(formatMessage(_error, false));
 
         final JButton showDetails = new JButton("Show StackTrace >>");
         final JButton copyToClipBoard = new JButton("Copy Stack Trace");
@@ -100,9 +101,8 @@ public final class ErrorDialog extends JDialog {
         filter = new JCheckBox("Filter stack traces");
         filter.setSelected(false);
         String stacktrace = generateStackTrace(_error);
-        _stacktrace  = new JEditorPane();
-        _stacktrace.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-        _stacktrace.setContentType("text/html");
+        _stacktrace  = new JTextArea();
+        _stacktrace.setEditable(false);
         _stacktrace.setText(stacktrace);
         _stacktraceBar = new JScrollPane(_stacktrace, 
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
@@ -124,7 +124,6 @@ public final class ErrorDialog extends JDialog {
         _main.add(messagePanel, BorderLayout.NORTH);
         _main.add(_stacktraceBar, BorderLayout.CENTER);
         _main.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        _header.setBackground(_main.getBackground());
         getContentPane().add(_main);
 
         pack();
@@ -177,7 +176,7 @@ public final class ErrorDialog extends JDialog {
             buffer = new StringBuilder();
             buffer.append(t.getClass().getName() + NEWLINE);
         } else {
-            buffer.append(formatMessage(t, true, false));
+            buffer.append(formatMessage(t, true));
         }
         buffer.append(formatStackTraces(t.getStackTrace()));
         Throwable cause = t.getCause();
@@ -203,13 +202,13 @@ public final class ErrorDialog extends JDialog {
      * Create a HTML formatted string with the given exception type and the message broken
      * at word boundaries at line of given width.
      */ 
-    String formatMessage(Throwable t, boolean appendClass, boolean addHTML) {
+    String formatMessage(Throwable t, boolean appendClass) {
         List<String> lines = wrapText((appendClass ? t.getClass().getName()+": " : "") + t.getMessage(), 80);
-        StringBuilder buf = new StringBuilder(addHTML ? "<HTML>" : "");
+        StringBuilder buf = new StringBuilder();
         for (String s : lines) {
             buf.append(s + NEWLINE);
         }
-        return buf.append(addHTML ? "</HTML>" : "").toString();
+        return buf.toString();
     }
     
     public static List<String> wrapText(String s, int width) {
