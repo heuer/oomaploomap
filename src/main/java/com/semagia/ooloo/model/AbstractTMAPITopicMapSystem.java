@@ -32,6 +32,7 @@ import com.semagia.ooloo.io.ImportUtils;
 import com.semagia.ooloo.query.IResult;
 import com.semagia.ooloo.query.Query;
 import com.semagia.ooloo.query.QueryException;
+import com.semagia.ooloo.query.QueryLanguage;
 
 /**
  * Abstract {@link ITopicMapSystem} implementation that uses a {@link TopicMapSystem}
@@ -78,7 +79,7 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
      * @return The query result.
      * @throws QueryException In case of an error.
      */
-    protected abstract IResult executeQuery(final TopicMap topicMap, final Query query) throws QueryException;
+    protected abstract IResult executeQuery(final TopicMap topicMap, final QueryLanguage lang, final Query query) throws QueryException;
 
     /* (non-Javadoc)
      * @see com.semagia.ooloo.model.ITopicMapSystem#getSources()
@@ -142,8 +143,8 @@ public abstract class AbstractTMAPITopicMapSystem implements ITopicMapSystem {
      * @see com.semagia.ooloo.model.ITopicMapSystem#executeQuery(java.net.URI, com.semagia.ooloo.query.Query)
      */
     @Override
-    public final IResult executeQuery(final URI uri, final Query query) throws QueryException {
-        return executeQuery(_tmSys.getTopicMap(uri.toString()), query);
+    public final IResult executeQuery(final URI uri, final QueryLanguage lang, final Query query) throws QueryException {
+        return executeQuery(_tmSys.getTopicMap(uri.toString()), lang, query);
     }
 
     /* (non-Javadoc)

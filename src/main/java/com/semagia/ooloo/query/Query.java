@@ -24,22 +24,14 @@ import java.net.URI;
  */
 public final class Query {
 
-    private final QueryLanguage _lang;
+    public static final Query EMPTY_QUERY = new Query("", null);
+
     private final String _query;
     private final URI _iri;
 
-    private Query(final QueryLanguage lang, final String query) {
-        this(lang, query, null);
-    }
-
-    private Query(final QueryLanguage lang, final String query, final URI iri) {
-        _lang = lang;
+    private Query(final String query, final URI iri) {
         _query = query;
         _iri = iri;
-    }
-
-    public QueryLanguage getQueryLanguage() {
-        return _lang;
     }
 
     public String getQueryString() {
@@ -50,12 +42,12 @@ public final class Query {
         return _iri;
     }
 
-    public static Query build(final QueryLanguage lang, final String query) {
-        return build(lang, query, null);
+    public static Query build(final String query) {
+        return build(query, null);
     }
 
-    public static Query build(final QueryLanguage lang, final String query, final URI iri) {
-        return new Query(lang, query, iri);
+    public static Query build(final String query, final URI iri) {
+        return new Query(query, iri);
     }
 
 }

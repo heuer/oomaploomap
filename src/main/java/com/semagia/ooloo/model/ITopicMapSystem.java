@@ -67,11 +67,12 @@ public interface ITopicMapSystem {
      * Issues a query against an IRI.
      * 
      * @param topicMap The topic map source.
+     * @param lang The query language.
      * @param query The query.
      * @return A query result.
      * @throws QueryException In case of an error.
      */
-    public IResult executeQuery(final URI topicMap, final Query query) throws QueryException;
+    public IResult executeQuery(final URI topicMap, final QueryLanguage lang, final Query query) throws QueryException;
 
     /**
      * Closes the provided {@link ITopicMapSource}.

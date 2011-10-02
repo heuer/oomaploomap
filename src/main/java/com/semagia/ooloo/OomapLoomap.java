@@ -19,17 +19,19 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JComponent;
-import javax.swing.JDesktopPane;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuBar;
 import javax.swing.JProgressBar;
+import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
-import javax.swing.event.InternalFrameAdapter;
-import javax.swing.event.InternalFrameEvent;
-import javax.swing.event.InternalFrameListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -38,7 +40,9 @@ import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.Task;
+import org.jdesktop.application.View;
 
+import com.jidesoft.swing.JideTabbedPane;
 import com.semagia.ooloo.io.FileUtils;
 import com.semagia.ooloo.model.ITopicMapSystem;
 import com.semagia.ooloo.model.OntopiaTopicMapSystem;
@@ -46,10 +50,11 @@ import com.semagia.ooloo.model.ITopicMapSystem.ITopicMapSource;
 import com.semagia.ooloo.query.IResult;
 import com.semagia.ooloo.query.Query;
 import com.semagia.ooloo.query.QueryLanguage;
+import com.semagia.ooloo.ui.DefaultTopicMapView;
 import com.semagia.ooloo.ui.ErrorDialog;
 import com.semagia.ooloo.ui.IQueryView;
+import com.semagia.ooloo.ui.ITopicMapView;
 import com.semagia.ooloo.ui.UIUtils;
-import com.semagia.ooloo.ui.QueryFrame;
 
 /**
  * Main application.
@@ -70,18 +75,19 @@ public final class OomapLoomap extends SingleFrameApplication {
                 com.semagia.ooloo.mode.TokenMakerFactory.class.getName());
     }
 
-    private JDesktopPane _desktop;
+    private JTabbedPane _topicMapsPane;
+    private final List<ITopicMapView> _topicMapViews;
     private String _lastDirectory;
+    private int _currentTopicMapIndex = -1;
 
     private ITopicMapSystem _tmSys;
 
     private JProgressBar _progressBar;
 
-    private InternalFrameListener _frameListener;
 
     private OomapLoomap() {
         _tmSys = new OntopiaTopicMapSystem();
-        _frameListener = new FrameListener();
+        _topicMapViews = new ArrayList<ITopicMapView>();
     }
 
     public static void main(final String[] args) throws Exception {
@@ -97,7 +103,8 @@ public final class OomapLoomap extends SingleFrameApplication {
         getMainFrame().add(_createToolBar(), BorderLayout.NORTH);
         getMainFrame().setPreferredSize(new Dimension(500, 400));
         show(_createMainPanel());
-        _setHasActiveFrame(false);
+        _setHasActiveTopicMapView(false);
+        _setHasActiveQueryView(false);
     }
 
     /* (non-Javadoc)
@@ -109,7 +116,11 @@ public final class OomapLoomap extends SingleFrameApplication {
         _tmSys.close();
     }
 
-    private void _setHasActiveFrame(boolean active) {
+    private void _setHasActiveTopicMapView(boolean active) {
+        getContext().getActionMap().get("newQuery").setEnabled(active);
+    }
+
+    private void _setHasActiveQueryView(boolean active) {
         getContext().getActionMap().get("runQuery").setEnabled(active);
         getContext().getActionMap().get("loadQuery").setEnabled(active);
         getContext().getActionMap().get("saveQuery").setEnabled(active);
@@ -125,7 +136,7 @@ public final class OomapLoomap extends SingleFrameApplication {
         final JMenuBar menuBar = new JMenuBar();
         menuBar.add(UIUtils.menuFromActions(this, "File", new String[]{"open", "---", "quit"}));
         menuBar.add(UIUtils.menuFromActions(this, "Edit", new String[]{"cut", "copy", "paste"}));
-        menuBar.add(UIUtils.menuFromActions(this, "Query", new String[]{"loadQuery", "---", "saveQuery", "saveAsQuery", "---", "runQuery"}));
+        menuBar.add(UIUtils.menuFromActions(this, "Query", new String[]{"newQuery", "---", "loadQuery", "---", "saveQuery", "saveAsQuery", "---", "runQuery"}));
         return menuBar;
     }
 
@@ -150,8 +161,17 @@ public final class OomapLoomap extends SingleFrameApplication {
      * @return The main panel.
      */
     private JComponent _createMainPanel() {
-        _desktop = new JDesktopPane();
-        return _desktop;
+        final JTabbedPane pane = new JideTabbedPane(JTabbedPane.LEFT);
+        pane.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(final ChangeEvent evt) {
+                _currentTopicMapIndex = ((JTabbedPane) evt.getSource()).getSelectedIndex();
+                _setHasActiveTopicMapView(true);
+                _setHasActiveQueryView(true);
+            }
+        });
+        _topicMapsPane = pane;
+        return _topicMapsPane;
     }
 
     /**
@@ -194,13 +214,31 @@ public final class OomapLoomap extends SingleFrameApplication {
     public ImportTopicMapTask open() {
         final File file = _openFile(_TM_FILE_FILTER);
         if (file != null) {
+            final URI uri = file.toURI();
+            if (_tmSys.getSource(uri) != null) {
+                int i = 0;
+                for (ITopicMapView view: _topicMapViews) {
+                    if (view.getSource().equals(uri)) {
+                        _topicMapsPane.setSelectedIndex(i);
+                        return null;
+                    }
+                    i++;
+                }
+                return null;
+            }
             return new ImportTopicMapTask(this, file);
         }
         return null;
     }
 
+    private ITopicMapView _tmView() {
+        return _currentTopicMapIndex == -1 ? null 
+                                           : _topicMapViews.get(_currentTopicMapIndex);
+    }
+
     private IQueryView _queryView() {
-        return (IQueryView) _desktop.getSelectedFrame();
+        final ITopicMapView tmView = _tmView();
+        return tmView == null ? null : tmView.getCurrentQueryView();
     }
 
     private Query _selectedQuery() {
@@ -224,10 +262,16 @@ public final class OomapLoomap extends SingleFrameApplication {
     }
 
     private void _setQueryLanguage(final QueryLanguage lang) {
-        final Query currentQuery = _selectedQuery();
-        if (currentQuery.getQueryLanguage() != lang) {
-            _queryView().setQueryLanguage(lang);
+        final IQueryView view = _queryView();
+        if (view.getQueryLanguage() != lang) {
+            view.setQueryLanguage(lang);
         }
+    }
+
+    @Action
+    public void newQuery() {
+        final ITopicMapView view = _tmView();
+        view.newQueryView(QueryLanguage.TMQL);
     }
 
     @Action
@@ -236,7 +280,9 @@ public final class OomapLoomap extends SingleFrameApplication {
         if (file != null) {
             try {
                 final String query = FileUtils.read(file);
-                _queryView().setQuery(Query.build(QueryLanguage.fromFilename(file.getName()), query, file.toURI()));
+                final IQueryView view = _queryView();
+                view.setQuery(Query.build(query, file.toURI()));
+                view.setQueryLanguage(QueryLanguage.fromFilename(file.getName()));
             }
             catch (IOException ex) {
                 _showErrorDialog(ex);
@@ -263,7 +309,6 @@ public final class OomapLoomap extends SingleFrameApplication {
             _lastDirectory = file.getAbsolutePath();
             final Query currentQuery = _selectedQuery();
             _writeQuery(file, currentQuery.getQueryString());
-            _queryView().setQuery(Query.build(currentQuery.getQueryLanguage(), currentQuery.getQueryString(), file.toURI()));
         }
     }
 
@@ -296,33 +341,13 @@ public final class OomapLoomap extends SingleFrameApplication {
         errorDialog.setVisible(true);
     }
 
-    private void _createQueryPane(final ITopicMapSource source) {
-        final QueryFrame frame = new QueryFrame(this, source);
-        _desktop.add(frame);
-        _desktop.setSelectedFrame(frame);
-        frame.addInternalFrameListener(_frameListener);
-        frame.setVisible(true);
-    }
-
-
-    private final class FrameListener extends InternalFrameAdapter {
-
-        /* (non-Javadoc)
-         * @see javax.swing.event.InternalFrameAdapter#internalFrameClosed(javax.swing.event.InternalFrameEvent)
-         */
-        @Override
-        public void internalFrameClosed(InternalFrameEvent evt) {
-            _setHasActiveFrame(false);
-            _tmSys.closeSource(((IQueryView) evt.getInternalFrame()).getTopicMapSource());
-        }
-
-        /* (non-Javadoc)
-         * @see javax.swing.event.InternalFrameAdapter#internalFrameActivated(javax.swing.event.InternalFrameEvent)
-         */
-        @Override
-        public void internalFrameActivated(InternalFrameEvent evt) {
-            _setHasActiveFrame(true);
-        }
+    private void _createTopicMapPane(final ITopicMapSource source) {
+        final String name = source.getName() != null ? source.getName() : source.getURI().getPath();
+        final View view = new DefaultTopicMapView(this, source);
+        final ITopicMapView tmView = (ITopicMapView) view;
+        tmView.newQueryView(QueryLanguage.TMQL);
+        _topicMapViews.add(tmView);
+        _topicMapsPane.addTab(name, view.getComponent());
     }
 
 
@@ -339,7 +364,7 @@ public final class OomapLoomap extends SingleFrameApplication {
         protected IResult doInBackground() throws Exception {
             _queryView.setResult(null);
             _queryView.setBusy(true);
-            return _tmSys.executeQuery(_queryView.getTopicMapSource(), _queryView.getQuery());
+            return _tmSys.executeQuery(_tmView().getSource().getURI(), _queryView.getQueryLanguage(), _queryView.getQuery());
         }
 
         /* (non-Javadoc)
@@ -386,7 +411,7 @@ public final class OomapLoomap extends SingleFrameApplication {
         @Override
         protected void succeeded(ITopicMapSource source) {
             _setBusy(false);
-            _createQueryPane(source);
+            _createTopicMapPane(source);
         }
     }
 

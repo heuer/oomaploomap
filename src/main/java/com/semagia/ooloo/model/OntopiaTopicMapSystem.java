@@ -86,10 +86,10 @@ public final class OntopiaTopicMapSystem extends AbstractTMAPITopicMapSystem {
      * @see com.semagia.ooloo.model.AbstractTMAPITopicMapSystem#executeQuery(org.tmapi.core.TopicMap, com.semagia.ooloo.query.Query)
      */
     @Override
-    public IResult executeQuery(final TopicMap topicMap, final Query query) throws QueryException {
-        final QueryProcessorFactoryIF procFactory = QueryUtils.getQueryProcessorFactory(query.getQueryLanguage().name());
+    public IResult executeQuery(final TopicMap topicMap, final QueryLanguage lang, final Query query) throws QueryException {
+        final QueryProcessorFactoryIF procFactory = QueryUtils.getQueryProcessorFactory(lang.name());
         if (procFactory == null) {
-            throw new QueryException("Unknown query language " + query.getQueryLanguage());
+            throw new QueryException("Unknown query language " + lang);
         }
         final QueryProcessorIF proc = procFactory.createQueryProcessor(_unwrap(topicMap), null, null);
         try {

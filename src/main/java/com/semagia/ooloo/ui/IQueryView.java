@@ -15,7 +15,6 @@
  */
 package com.semagia.ooloo.ui;
 
-import com.semagia.ooloo.model.ITopicMapSystem.ITopicMapSource;
 import com.semagia.ooloo.query.IResult;
 import com.semagia.ooloo.query.Query;
 import com.semagia.ooloo.query.QueryLanguage;
@@ -31,9 +30,9 @@ public interface IQueryView {
 
     public void setQuery(Query query);
 
-    public void setQueryLanguage(QueryLanguage lang);
+    public QueryLanguage getQueryLanguage();
 
-    public ITopicMapSource getTopicMapSource();
+    public void setQueryLanguage(QueryLanguage lang);
 
     public void setBusy(boolean busy);
 

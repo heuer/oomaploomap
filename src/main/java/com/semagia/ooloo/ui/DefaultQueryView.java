@@ -44,7 +44,6 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.View;
 
-import com.semagia.ooloo.model.ITopicMapSystem.ITopicMapSource;
 import com.semagia.ooloo.query.IResult;
 import com.semagia.ooloo.query.Query;
 import com.semagia.ooloo.query.QueryLanguage;
@@ -54,11 +53,11 @@ import com.semagia.ooloo.query.QueryLanguage;
  * 
  * @author Lars Heuer (heuer[at]semagia.com) <a href="http://www.semagia.com/">Semagia</a>
  */
-public final class DefaultQueryView extends View implements IQueryView {
+final class DefaultQueryView extends View implements IQueryView {
 
     private static final TableModel _NOOP_TABLE_MODEL = new DefaultTableModel();
 
-    private final ITopicMapSource _tmSrc;
+    private final QueryLanguage _queryLanguage;
     private Query _query;
     private TextEditorPane _queryEditor;
     private JTable _results;
@@ -76,14 +75,16 @@ public final class DefaultQueryView extends View implements IQueryView {
     }
 
     /**
+     * @param queryLanguage 
      * 
      *
      */
-    public DefaultQueryView(final Application app, final ITopicMapSource tmSrc) {
+    public DefaultQueryView(final Application app, final QueryLanguage queryLanguage) {
         super(app);
         _progressBar = new JProgressBar();
         _progressBar.setBorderPainted(false);
-        _tmSrc = tmSrc;
+        _queryLanguage = queryLanguage;
+        _query = Query.EMPTY_QUERY;
     }
 
     /* (non-Javadoc)
@@ -95,7 +96,7 @@ public final class DefaultQueryView extends View implements IQueryView {
         JSplitPane splitter = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         _queryEditor = new TextEditorPane(TextEditorPane.INSERT_MODE);
         final RTextScrollPane textPane = new RTextScrollPane(_queryEditor);
-        textPane.setPreferredSize(new Dimension(600, 350));
+        textPane.setPreferredSize(new Dimension(600, 250));
         _results = new JTable() {
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column){
                 Component res = super.prepareRenderer(renderer, row, column);
@@ -111,7 +112,7 @@ public final class DefaultQueryView extends View implements IQueryView {
         final JPanel panel = new JPanel(new BorderLayout());
         panel.add(_createToolBar(), BorderLayout.NORTH);
         final JScrollPane resultPane = new JScrollPane(_results);
-        resultPane.setPreferredSize(new Dimension(600, 250));
+        resultPane.setPreferredSize(new Dimension(600, 350));
         panel.add(resultPane);
         splitter.setRightComponent(panel);
         _initQueryEditor();
@@ -142,7 +143,7 @@ public final class DefaultQueryView extends View implements IQueryView {
         _queryEditor.getPopupMenu().add(queryLanguageMenu);
         _queryEditor.setTabsEmulated(true);
         _queryEditor.setTabSize(4);
-        setQuery(Query.build(QueryLanguage.TMQL, ""));
+        setQueryLanguage(_queryLanguage);
 
         //TODO: Make this configurable and find better colors
         final SyntaxScheme scheme = _queryEditor.getSyntaxScheme();
@@ -160,7 +161,7 @@ public final class DefaultQueryView extends View implements IQueryView {
      */
     @Override
     public Query getQuery() {
-        return Query.build(QueryLanguage.valueOf(_queryEditor.getSyntaxEditingStyle()), _queryEditor.getText(), _query.getURI());
+        return Query.build(_queryEditor.getText(), _query.getURI());
     }
 
     /* (non-Javadoc)
@@ -171,7 +172,14 @@ public final class DefaultQueryView extends View implements IQueryView {
         _query = query;
         _queryEditor.setText(query.getQueryString());
         _queryEditor.setCaretPosition(0);
-        setQueryLanguage(query.getQueryLanguage());
+    }
+
+    /* (non-Javadoc)
+     * @see com.semagia.ooloo.ui.IQueryView#getQueryLanguage()
+     */
+    @Override
+    public QueryLanguage getQueryLanguage() {
+        return _queryLanguage;
     }
 
     /* (non-Javadoc)
@@ -181,14 +189,6 @@ public final class DefaultQueryView extends View implements IQueryView {
     public void setQueryLanguage(QueryLanguage lang) {
         _queryEditor.setSyntaxEditingStyle(lang.name());
         _queryEditor.setWhitespaceVisible(true);
-    }
-
-    /* (non-Javadoc)
-     * @see com.semagia.ooloo.ui.IQueryView#getTopicMapSource()
-     */
-    @Override
-    public ITopicMapSource getTopicMapSource() {
-        return _tmSrc;
     }
 
     /* (non-Javadoc)
