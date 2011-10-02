@@ -27,10 +27,11 @@ defaultTasks 'clean', 'build'
 
 mainClassName = 'com.semagia.ooloo.OomapLoomap'
 
-eclipseClasspath.downloadSources = false
+eclipse.classpath.downloadSources = false
 
 libs = ['lib/rsyntaxtextarea.jar',
-        'lib/bsaf-1.9.jar']
+        'lib/bsaf-1.9.jar',
+        'lib/jide-oss-3.0.3.jar']
 
 REP_TMAPI = 'http://www.tmapi.org/maven-repository/'
 REP_TMLAB = 'http://maven.topicmapslab.de/public/'
@@ -79,6 +80,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    mavenRepo urls: REP_TMAPI
     mavenRepo urls: REP_TMAPI_SNAPSHOT
     mavenRepo urls: REP_SEMAGIA_SNAPSHOT
     mavenRepo urls: REP_TMLAB
@@ -139,6 +141,8 @@ jar {
       }
 }
 
+/*
 artifacts {
     archives jar
 }
+*/
